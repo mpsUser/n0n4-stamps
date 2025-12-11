@@ -326,15 +326,32 @@ export default function UploadPage() {
                             </button>
                         ) : (
                             <div className="space-y-4">
-                                {protectedUrl && (
-                                    <a
-                                        href={protectedUrl}
-                                        download
-                                        className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
-                                    >
-                                        <Download /> {t('upload.btn.download')}
-                                    </a>
-                                )}
+                                <button
+                                    onClick={async () => {
+                                        if (!protectedUrl) return;
+                                        try {
+                                            const response = await fetch(protectedUrl);
+                                            const blob = await response.blob();
+                                            const url = window.URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.style.display = 'none';
+                                            a.href = url;
+                                            // Extract filename from URL or use default
+                                            const filename = protectedUrl.split('/').pop() || 'protected-file';
+                                            a.download = filename;
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            window.URL.revokeObjectURL(url);
+                                        } catch (e) {
+                                            console.error('Download failed:', e);
+                                            // Fallback to opening in new tab
+                                            window.open(protectedUrl, '_blank');
+                                        }
+                                    }}
+                                    className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
+                                >
+                                    <Download /> {t('upload.btn.download')}
+                                </button>
 
                                 <button onClick={reset} className="w-full py-2 text-slate-500 hover:text-slate-800 text-sm underline">
                                     {t('upload.btn.other')}
