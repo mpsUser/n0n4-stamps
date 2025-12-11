@@ -18,7 +18,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 // CREDITS CONTEXT
 interface CreditsContextType {
     credits: number;
-    credits: number;
+
     refreshCredits: () => Promise<void>;
     userDiscount: number; // Percentage 0-100
 }
