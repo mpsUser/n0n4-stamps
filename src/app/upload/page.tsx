@@ -36,10 +36,18 @@ export default function UploadPage() {
         }
     }, [file]);
 
+    const validateAndSetFile = (newFile: File) => {
+        if (newFile.size > 50 * 1024 * 1024) {
+            alert("El archivo excede el límite de 50MB.");
+            return;
+        }
+        setFile(newFile);
+    };
+
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile) setFile(droppedFile);
+        if (droppedFile) validateAndSetFile(droppedFile);
     };
 
     const currentLevelData = LEVELS[level];
@@ -142,7 +150,7 @@ export default function UploadPage() {
                                     type="file"
                                     hidden
                                     ref={fileInputRef}
-                                    onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])}
+                                    onChange={(e) => e.target.files?.[0] && validateAndSetFile(e.target.files[0])}
                                 />
                             </div>
                         ) : (
@@ -327,26 +335,11 @@ export default function UploadPage() {
                         ) : (
                             <div className="space-y-4">
                                 <button
-                                    onClick={async () => {
+                                    onClick={() => {
                                         if (!protectedUrl) return;
-                                        try {
-                                            const response = await fetch(protectedUrl);
-                                            const blob = await response.blob();
-                                            const url = window.URL.createObjectURL(blob);
-                                            const a = document.createElement('a');
-                                            a.style.display = 'none';
-                                            a.href = url;
-                                            // Extract filename from URL or use default
-                                            const filename = protectedUrl.split('/').pop() || 'protected-file';
-                                            a.download = filename;
-                                            document.body.appendChild(a);
-                                            a.click();
-                                            window.URL.revokeObjectURL(url);
-                                        } catch (e) {
-                                            console.error('Download failed:', e);
-                                            // Fallback to opening in new tab
-                                            window.open(protectedUrl, '_blank');
-                                        }
+                                        const filename = protectedUrl.split('/').pop() || 'protected-file';
+                                        const proxyUrl = `/api/download?url=${encodeURIComponent(protectedUrl)}&filename=${encodeURIComponent(filename)}`;
+                                        window.location.href = proxyUrl;
                                     }}
                                     className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
                                 >

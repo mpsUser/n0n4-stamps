@@ -5,7 +5,9 @@ import Navbar from '@/components/Navbar';
 import { protectFile, LEVELS, type NLevel, type StampStyle, type StampFormat, type StampLanguage } from '@/lib/c2pa';
 import { Upload as UploadIcon, X, FileText, CheckCircle, Play, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useLanguage } from '@/components/Providers';
+import { useLanguage, useCredits } from '@/components/Providers';
+import { signAndUploadAction } from '@/actions/c2pa';
+import { saveUploadRecord } from '@/app/actions';
 
 interface QueueItem {
     id: string;
@@ -15,6 +17,7 @@ interface QueueItem {
 
 export default function BatchUploadPage() {
     const { t, language: appLanguage } = useLanguage();
+    const { refreshCredits } = useCredits();
     const [queue, setQueue] = useState<QueueItem[]>([]);
     const [level, setLevel] = useState<NLevel>(0);
     const [stampStyle, setStampStyle] = useState<StampStyle>('A');
@@ -32,7 +35,15 @@ export default function BatchUploadPage() {
     };
 
     const addFiles = (files: File[]) => {
-        const newItems = files.map(f => ({
+        const validFiles = files.filter(f => {
+            if (f.size > 50 * 1024 * 1024) {
+                alert(`El archivo ${f.name} excede el límite de 50MB y fue omitido.`);
+                return false;
+            }
+            return true;
+        });
+
+        const newItems = validFiles.map(f => ({
             id: Math.random().toString(36).substr(2, 9),
             file: f,
             status: 'pending' as const
@@ -54,31 +65,59 @@ export default function BatchUploadPage() {
 
             setQueue(prev => prev.map(i => i.id === item.id ? { ...i, status: 'processing' } : i));
 
-            await protectFile(item.file, {
-                author: 'Batch User',
+            // Generate Metadata
+            const timestamp = Date.now();
+            const newName = `${timestamp}_${item.file.name}`;
+
+            // Generate Metadata for C2PA
+            const metadata = {
+                author: 'Usuario Demo', // Should ideally come from User Profile
                 level,
                 levelLabel: appLanguage === 'es' ? LEVELS[level].label_es : LEVELS[level].label_en,
                 stampStyle,
                 stampFormat,
                 stampLanguage: stampLang,
                 timestamp: new Date().toISOString()
-            });
+            };
 
-            const existingLib = JSON.parse(localStorage.getItem('n0n4_library') || '[]');
-            existingLib.unshift({
-                id: Date.now() + Math.random(),
-                name: item.file.name,
-                level,
-                style: stampStyle,
-                date: new Date().toISOString()
-            });
-            localStorage.setItem('n0n4_library', JSON.stringify(existingLib));
+            const formData = new FormData();
+            formData.append('file', item.file);
+            formData.append('newName', newName);
 
-            setQueue(prev => prev.map(i => i.id === item.id ? { ...i, status: 'done' } : i));
+            try {
+                // 1. Sign and Upload
+                const result = await signAndUploadAction(formData, metadata);
+
+                if (result.success && result.signedUrl) {
+                    // 2. Save Record to DB
+                    await saveUploadRecord({
+                        id: timestamp,
+                        name: item.file.name,
+                        serverPath: result.signedUrl,
+                        level,
+                        style: stampStyle,
+                        lang: stampLang,
+                        date: new Date().toISOString(),
+                        isImage: item.file.type.startsWith('image/')
+                    });
+
+                    setQueue(prev => prev.map(i => i.id === item.id ? { ...i, status: 'done' } : i));
+                } else {
+                    console.error("Batch item failed:", result.error);
+                    // Mark as pending to retry? Or error state? For now, leave as processing or pending.
+                    setQueue(prev => prev.map(i => i.id === item.id ? { ...i, status: 'pending' } : i));
+                }
+
+            } catch (e) {
+                console.error("Batch error for file", item.file.name, e);
+            }
         }
 
+        // Refresh credits once at the end (or per item, but once at end is cleaner for UI)
+        await refreshCredits(); // Refresh context
         setIsProcessing(false);
     };
+
 
     return (
         <>

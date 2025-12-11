@@ -7,6 +7,7 @@ import { ShieldCheck, Upload as UploadIcon, CheckCircle, XCircle, Key } from 'lu
 import { motion } from 'framer-motion';
 import { verifyC2PA, C2PAMetadata } from '@/lib/c2pa';
 import { logActivity, chargeUser } from '@/app/actions';
+import { verifyAction } from '@/actions/c2pa';
 import { useUser } from '@clerk/nextjs';
 import { useCredits } from '@/components/Providers';
 
@@ -42,20 +43,33 @@ export default function VerifyPage() {
         setScanDone(false);
         setResult(null);
 
-        // Call our extraction logic
-        const meta = await verifyC2PA(f);
+        const formData = new FormData();
+        formData.append('file', f);
 
-        // Artificial delay for scanning effect
-        setTimeout(() => {
-            setResult(meta);
+        try {
+            // Call Server Action
+            const response = await verifyAction(formData);
+
+            // Artificial delay for scanning effect
+            setTimeout(() => {
+                setIsScanning(false);
+                setScanDone(true);
+
+                if (response.success && response.metadata) {
+                    setResult(response.metadata);
+                    const email = user?.primaryEmailAddress?.emailAddress || 'Unknown';
+                    logActivity('VERIFY_FILE', `Verified file: ${f.name} (Valid)`, email);
+                } else {
+                    setResult(null);
+                    // Optionally show specific error: response.error
+                }
+            }, 1000);
+
+        } catch (e) {
+            console.error("Verification request failed", e);
             setIsScanning(false);
-            setScanDone(true);
-
-            if (meta) {
-                const email = user?.primaryEmailAddress?.emailAddress || 'Unknown';
-                logActivity('VERIFY_FILE', `Verified file: ${f.name} (Valid)`, email);
-            }
-        }, 1500);
+            setResult(null);
+        }
     }
 
     return (

@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import { useLanguage, useCredits } from '@/components/Providers';
 import { CreditCard, FileUp, FolderOpen, TrendingUp, ShieldCheck, Activity, Leaf, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import { logActivity, getUserUploads, getLogs, getFinancialStats } from '@/app/actions';
+import { logActivity, getUserUploads, getLogs } from '@/app/actions';
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { DollarSign } from 'lucide-react';
@@ -27,15 +27,13 @@ export default function DashboardPage() {
         saved: '0 MB',
         verifications: 0,
         score: 95,
-        carbon: '0 g',
-        revenue: 0
+        carbon: '0 g'
     });
 
     useEffect(() => {
         async function loadServerData() {
             const uploads = await getUserUploads();
             const logs = await getLogs();
-            const financial = await getFinancialStats();
 
             const protectedCount = uploads.length;
             const verifications = logs.filter(l => l.action.includes('VERIFY')).length;
@@ -48,8 +46,7 @@ export default function DashboardPage() {
                 saved: sizeMB.toFixed(0) + ' MB',
                 verifications,
                 score: 95 + Math.min(protectedCount, 5), // dynamic score
-                carbon,
-                revenue: financial.revenue
+                carbon
             });
         }
         if (user) loadServerData();
@@ -69,20 +66,6 @@ export default function DashboardPage() {
 
                 {/* Key Metrics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    {/* Revenue Card (New) */}
-                    <div className="glass-panel p-6 flex flex-col justify-between h-40 bg-white border-t-4 border-t-emerald-500">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-slate-500 text-sm font-medium uppercase">Total Revenue</p>
-                                <h2 className="text-4xl font-bold text-slate-900 mt-2">${stats.revenue.toFixed(2)}</h2>
-                            </div>
-                            <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-lg">
-                                <DollarSign size={24} />
-                            </div>
-                        </div>
-                        <div className="text-sm text-slate-500">Total investment</div>
-                    </div>
-
                     {/* Original 3 */}
                     <div className="glass-panel p-6 flex flex-col justify-between h-40 bg-white">
                         <div className="flex justify-between items-start">

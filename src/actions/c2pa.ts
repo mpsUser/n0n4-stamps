@@ -141,3 +141,65 @@ export async function signAndUploadAction(formData: FormData, metadata: any): Pr
         isFallback: !signingSuccess
     };
 }
+
+export async function verifyAction(formData: FormData): Promise<{ success: boolean; metadata?: any; error?: string }> {
+    const file = formData.get('file') as File;
+    if (!file) return { success: false, error: 'No file provided' };
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const mimeType = file.type;
+    const isImage = mimeType === 'image/jpeg' || mimeType === 'image/png';
+    const isPdf = mimeType === 'application/pdf';
+
+    try {
+        // 1. Setup C2PA (Reader mode - no signer needed)
+        const c2pa = await createC2pa({});
+
+        let report;
+
+        // 2. Read Manifest
+        if (isImage) {
+            console.log('[C2PA] Verifying Image in memory...');
+            const result = await c2pa.read({ buffer, mimeType });
+            report = result?.manifest;
+        } else if (isPdf) {
+            console.log('[C2PA] Verifying PDF in /tmp...');
+            const tempInput = path.join('/tmp', `verify_${Date.now()}.pdf`);
+            await fs.writeFile(tempInput, buffer);
+
+            try {
+                const result = await c2pa.read({ path: tempInput, mimeType });
+                report = result?.manifest;
+            } finally {
+                await fs.unlink(tempInput).catch(() => { });
+            }
+        } else {
+            return { success: false, error: 'Unsupported file type' };
+        }
+
+        if (report) {
+            // 3. Extract n0n4 metadata
+            // The structure depends on c2pa-node output. Usually assertions are in report.assertions or similar.
+            // We search for our custom label 'n0n4.metadata'.
+            // report.assertions structure: [{ label: '...', data: ... }]
+
+            const customAssertion = report.assertions?.find((a: any) => a.label === 'n0n4.metadata');
+
+            if (customAssertion) {
+                return { success: true, metadata: customAssertion.data };
+            } else {
+                console.log('Valid C2PA found but no N0N4 metadata');
+                // Return empty or partial success?
+                // For N0N4 app, if it's not our metadata, we might verify it's valid C2PA but fail the "N0N4 Verification".
+                // Let's return error for now to be strict.
+                return { success: false, error: 'Not a N0N4 protected file' };
+            }
+        }
+
+        return { success: false, error: 'No C2PA manifest found' };
+
+    } catch (e: any) {
+        console.error('[C2PA] Verification Failed:', e);
+        return { success: false, error: 'Verification failed' };
+    }
+}

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Settings, Save, User as UserIcon, CreditCard, Activity, List, RefreshCw, Lock, AlertTriangle, Users, Plus, Minus } from 'lucide-react';
 import { clsx } from 'clsx';
-import { getLogs, ActivityLog, adminGetAllUsers, adminUpdateUser, getConfig, updateConfig, UserProfile, AppConfig } from '@/app/actions';
+import { getLogs, ActivityLog, adminGetAllUsers, adminUpdateUser, getConfig, updateConfig, UserProfile, AppConfig, getFinancialStats } from '@/app/actions';
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
 import { useCredits } from '@/components/Providers';
 
@@ -28,6 +28,9 @@ export default function AdminPage() {
     const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
 
+    // Revenue State
+    const [totalRevenue, setTotalRevenue] = useState(0);
+
     const isAdmin = user?.primaryEmailAddress?.emailAddress === ADMIN_EMAIL;
 
     // Load Data based on Tab
@@ -38,7 +41,15 @@ export default function AdminPage() {
         if (activeTab === 'settings') loadConfig();
         if (activeTab === 'users') loadUsers();
 
+        // Always load revenue for header or specific tab
+        loadRevenue();
+
     }, [activeTab, isAdmin]);
+
+    const loadRevenue = async () => {
+        const stats = await getFinancialStats();
+        setTotalRevenue(stats.revenue);
+    };
 
     // Force tab logic
     useEffect(() => {
@@ -140,6 +151,24 @@ export default function AdminPage() {
                             )}
                         </div>
                     </div>
+
+                    {/* REVENUE SUMMARY CARD */}
+                    {isAdmin && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div className="glass-panel p-6 flex flex-col justify-between h-32 bg-white border-l-4 border-l-emerald-500 shadow-sm">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Revenue</p>
+                                        <h2 className="text-3xl font-bold text-slate-900 mt-1">${totalRevenue.toFixed(2)}</h2>
+                                    </div>
+                                    <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                                        <CreditCard size={20} />
+                                    </div>
+                                </div>
+                                <div className="text-xs text-slate-400">Life-time gross revenue</div>
+                            </div>
+                        </div>
+                    )}
 
                     {!isAdmin && activeTab === 'settings' && (
                         <div className="p-4 bg-red-50 text-red-700 rounded-lg mb-4 flex items-center gap-2">

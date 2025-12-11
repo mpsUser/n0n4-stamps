@@ -96,8 +96,7 @@ export default function LibraryPage() {
                                         <div className="flex gap-2">
                                             {item.serverPath && (
                                                 <a
-                                                    href={item.serverPath}
-                                                    download
+                                                    href={`/api/download?url=${encodeURIComponent(item.serverPath)}&filename=${encodeURIComponent(item.name)}`}
                                                     className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-bold flex items-center justify-center transition-colors"
                                                 >
                                                     <Download size={16} className="mr-2" /> Download
