@@ -1,42 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Brand Colors */
+  --n0-color: #2E7D32;
+  --n1-color: #0288D1;
+  --n2-color: #6A1B9A;
+  --n3-color: #EF6C00;
+  --n4-color: #C62828;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  --background: #f8fafc;
+  /* Forced Light Background */
+  --foreground: #0f172a;
+  /* Forced Dark Text */
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: rgba(0, 0, 0, 0.1);
+
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+
+  /* Glassmorphism Light */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.05);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  --glass-backdrop: blur(10px);
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: #f8fafc;
+  /* Slate-50 equivalent */
   font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #60a5fa, #a78bfa, #f472b6);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* N Level Colors */
+.text-n0 {
+  color: var(--n0-color);
+}
+
+.text-n1 {
+  color: var(--n1-color);
+}
+
+.text-n2 {
+  color: var(--n2-color);
+}
+
+.text-n3 {
+  color: var(--n3-color);
+}
+
+.text-n4 {
+  color: var(--n4-color);
+}
+
+.bg-n0 {
+  background-color: var(--n0-color);
+}
+
+.bg-n1 {
+  background-color: var(--n1-color);
+}
+
+.bg-n2 {
+  background-color: var(--n2-color);
+}
+
+.bg-n3 {
+  background-color: var(--n3-color);
+}
+
+.bg-n4 {
+  background-color: var(--n4-color);
 }

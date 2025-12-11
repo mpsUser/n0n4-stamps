@@ -1,0 +1,17 @@
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = US
+ST = CA
+L = San Francisco
+O = N0N4 Dev
+CN = N0N4 Developer Identity
+
+[v3_req]
+keyUsage = critical, digitalSignature
+extendedKeyUsage = emailProtection
+basicConstraints = critical, CA:FALSE
+subjectKeyIdentifier = hash

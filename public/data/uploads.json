@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1765076434216,
+    "name": "trafikito-03.jpeg",
+    "serverPath": "/protected_files/1765076434216_trafikito-03.jpeg",
+    "level": 3,
+    "style": "A",
+    "lang": "en",
+    "date": "2025-12-07T03:00:34.735Z",
+    "isImage": true,
+    "email": "marcpserra@icloud.com"
+  },
+  {
+    "id": 1765076616860,
+    "name": "documento 4.pdf",
+    "serverPath": "/protected_files/1765076616860_documento 4.pdf",
+    "level": 1,
+    "style": "A",
+    "lang": "es",
+    "date": "2025-12-07T03:03:39.529Z",
+    "isImage": false,
+    "email": "marcpedrero@gmail.com"
+  },
+  {
+    "id": 1765215249740,
+    "name": "ij-04.jpeg",
+    "serverPath": "/protected_files/1765215249740_ij-04.jpeg",
+    "level": 3,
+    "style": "A",
+    "lang": "es",
+    "date": "2025-12-08T17:34:10.556Z",
+    "isImage": true,
+    "email": "marcpedrero@gmail.com"
+  }
+]

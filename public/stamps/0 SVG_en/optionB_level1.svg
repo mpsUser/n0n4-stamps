@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+<rect x="16" y="16" width="480" height="480" rx="32" ry="32" fill="white" stroke="#1565C0" stroke-width="6"/>
+<circle cx="256" cy="210" r="140" fill="none" stroke="#B0BEC5" stroke-width="28"/>
+<circle cx="256" cy="210" r="140" fill="none" stroke="#1565C0" stroke-width="28" stroke-dasharray="219.9114857512855 659.7344572538566" transform="rotate(-90 256 210)"/>
+<text x="256.0" y="200" font-size="36" text-anchor="middle" fill="#263238" font-weight="bold">AI 25%</text>
+<text x="256.0" y="360" font-size="24" text-anchor="middle" fill="#263238">Level 1 · AI Assisted</text>
+</svg>

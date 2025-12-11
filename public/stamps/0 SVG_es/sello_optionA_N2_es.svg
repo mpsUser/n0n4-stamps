@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<rect x="16" y="16" width="480" height="480" rx="32" ry="32" fill="white" stroke="#6A1B9A" stroke-width="6" />
+<rect x="56" y="80" width="400" height="40" rx="12" ry="12" fill="#B0BEC5" />
+<rect x="56" y="140" width="400" height="40" rx="12" ry="12" fill="#B0BEC5" />
+<rect x="56" y="200" width="400" height="40" rx="12" ry="12" fill="#6A1B9A" />
+<rect x="56" y="260" width="400" height="40" rx="12" ry="12" fill="#B0BEC5" />
+<rect x="56" y="320" width="400" height="40" rx="12" ry="12" fill="#B0BEC5" />
+<text x="256.0" y="360" font-family="DejaVu Sans, Arial" font-weight="700" font-size="36" fill="#263238" text-anchor="middle">IA Nivel 2</text>
+<text x="256.0" y="410" font-family="DejaVu Sans, Arial" font-size="24" fill="#263238" text-anchor="middle">Coautor</text>
+</svg>

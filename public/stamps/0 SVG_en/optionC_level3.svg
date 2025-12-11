@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+<rect x="40" y="160" width="432" height="190" rx="80" ry="80" fill="white" stroke="#EF6C00" stroke-width="8"/>
+<rect x="60" y="190" width="160" height="130" rx="60" ry="60" fill="#EF6C00"/>
+<text x="140" y="255" font-size="36" text-anchor="middle" fill="white" font-weight="bold">AI</text>
+<text x="240" y="230" font-size="36" fill="#263238" font-weight="bold">Level 3</text>
+<text x="240" y="285" font-size="24" fill="#263238">AI Predominant</text>
+</svg>

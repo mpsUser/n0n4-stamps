@@ -1,0 +1,17 @@
+[
+  {
+    "email": "marcpedrero@gmail.com",
+    "credits": 354,
+    "discount": 50
+  },
+  {
+    "email": "marcpserra@icloud.com",
+    "credits": 29,
+    "discount": 40
+  },
+  {
+    "email": "admin_placeholder",
+    "credits": 10,
+    "discount": 0
+  }
+]

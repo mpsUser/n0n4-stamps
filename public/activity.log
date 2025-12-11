@@ -1,0 +1,222 @@
+{"timestamp":"2025-12-07T01:53:04.729Z","action":"PROTECT_FILE","user":"System","details":"Saved file: 1765072384684_Socabum-01.jpeg"}
+{"timestamp":"2025-12-07T01:56:42.772Z","action":"PROTECT_FILE","user":"System","details":"Saved file: 1765072602708_Marañito-01.jpeg"}
+{"timestamp":"2025-12-07T02:21:35.715Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:21:35.736Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:23:10.523Z","action":"VERIFY_FILE","user":"marcpserra@icloud.com","details":"Verified file: 1765072602708_Marañito-01.jpeg (Valid)"}
+{"timestamp":"2025-12-07T02:23:22.835Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:23:22.852Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:26:09.620Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:26:09.638Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:26:23.873Z","action":"BUY_CREDITS","user":"marcpserra@icloud.com","details":"Purchased 50 Credits Pack"}
+{"timestamp":"2025-12-07T02:26:33.822Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:26:33.836Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:26:35.588Z","action":"BUY_CREDITS","user":"marcpserra@icloud.com","details":"Purchased 50 Credits Pack"}
+{"timestamp":"2025-12-07T02:26:46.678Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:26:46.692Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:34:22.441Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:34:22.456Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:34:26.281Z","action":"BUY_CREDITS","user":"marcpserra@icloud.com","details":"Purchased 50 Credits Pack"}
+{"timestamp":"2025-12-07T02:34:56.019Z","action":"BUY_CREDITS","user":"marcpserra@icloud.com","details":"Purchased 50 Credits Pack"}
+{"timestamp":"2025-12-07T02:35:12.887Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:35:12.912Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:35:25.786Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:35:25.802Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:37:36.007Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:37:36.037Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:41:41.914Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:41:41.928Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:41:54.945Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:41:54.964Z","action":"DASHBOARD_ACCESS","user":"marcpserra@icloud.com","details":"User viewed dashboard"}
+{"timestamp":"2025-12-07T02:58:13.189Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T02:58:16.684Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T02:58:38.341Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T02:58:38.715Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:00:02.757Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:00:03.293Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:00:34.725Z","action":"PROTECT_FILE","details":"Saved file: 1765076434216_trafikito-03.jpeg","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:00:43.427Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:00:43.980Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:00:52.200Z","action":"VERIFY_FILE","details":"Verified file: 1765076434216_trafikito-03.jpeg (Valid)","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:01:17.256Z","action":"BUY_CREDITS","details":"Purchased 100 Credits Pack","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:01:23.391Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:01:23.955Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:02:51.233Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:02:51.783Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:03:06.532Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:03:06.873Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:03:39.520Z","action":"PROTECT_FILE","details":"Saved file: 1765076616860_documento 4.pdf","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:01.638Z","action":"VERIFY_FILE","details":"Verified file: 1765076616860_documento 4.pdf (Valid)","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:10.311Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:10.632Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:14.836Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:15.244Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:16.316Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:04:16.720Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:05:13.527Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:05:14.532Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:13:55.202Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:13:55.668Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:15:46.273Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:15:47.281Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:16:01.109Z","action":"VERIFY_FILE","details":"Verified file: 1765076616860_documento 4.pdf (Valid)","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:16:25.560Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:16:25.869Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpserra@icloud.com"}
+{"timestamp":"2025-12-07T03:16:55.482Z","action":"ADMIN_UPDATE_CONFIG","details":"Set prices: Protect 5, Verify 1","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:17:29.588Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:17:31.096Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:17:52.743Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:17:53.223Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:20:13.230Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:20:13.575Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:23:59.022Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:23:59.373Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:01.880Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:02.359Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:17.211Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits 20, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:18.115Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits 30, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:19.272Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits 40, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:20.228Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits 50, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:24:21.117Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits 60, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:25:38.912Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpserra@icloud.com: Credits 19, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:25:40.470Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpserra@icloud.com: Credits 29, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:25:45.617Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpserra@icloud.com: Credits 19, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:25:47.396Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpserra@icloud.com: Credits 29, Discount undefined","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:26:19.672Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:26:20.265Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:29:29.910Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:29:30.404Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:07.169Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:08.054Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:11.607Z","action":"BUY_CREDITS","details":"User purchased 50 credits. New balance: 110","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:27.242Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:27.565Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:32.112Z","action":"BUY_CREDITS","details":"User purchased 50 credits. New balance: 160","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:37.053Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:30:37.670Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:32:17.432Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:32:17.760Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:32:19.387Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:32:19.706Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:32:28.172Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:32:28.477Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:36:41.710Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:36:47.270Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:36:54.105Z","action":"BUY_CREDITS","details":"User purchased 50 credits. New balance: 210","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:39:58.675Z","action":"BUY_CREDITS","details":"User purchased 50 credits. New balance: 260","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:05.264Z","action":"BUY_CREDITS","details":"User purchased 100 credits. New balance: 360","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:35.257Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 1","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:39.613Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:40.296Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 15","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:40.909Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:42.074Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:42.692Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:43.281Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 5","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:43.590Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:45.403Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:45.715Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:46.057Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:46.666Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:46.946Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:47.547Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:48.167Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 0","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:49.676Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpedrero@gmail.com: Credits undefined, Discount 50","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:40:54.695Z","action":"ADMIN_UPDATE_USER","details":"Updated marcpserra@icloud.com: Credits undefined, Discount 40","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:41:26.726Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-07T03:41:27.038Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:28:36.293Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:28:36.691Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:29:07.079Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:29:07.287Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:29:07.942Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:29:08.259Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:34:10.545Z","action":"PROTECT_FILE","details":"Saved file: 1765215249740_ij-04.jpeg","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:34:34.363Z","action":"VERIFY_FILE","details":"Verified file: 1765215249740_ij-04.jpeg (Valid)","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:34:44.568Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:34:44.991Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:34:48.308Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:34:48.608Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-08T17:35:04.699Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:25:03.115Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:25:03.577Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:56:57.133Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:56:58.139Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:57:11.941Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:57:12.809Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:57:21.700Z","action":"BUY_CREDITS","details":"User purchased 50 credits. New balance: 60","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T04:57:31.878Z","action":"BUY_CREDITS","details":"User purchased 500 credits. New balance: 560","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T05:11:17.348Z","action":"PROTECT_FILE","details":"Saved file: 1765343475615_IMG_1963.JPEG","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T05:11:37.174Z","action":"VERIFY_FILE","details":"Verified file: 1765343475615_IMG_1963.JPEG (Valid)","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T05:11:51.621Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T05:11:52.472Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T05:11:56.505Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T05:11:57.430Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:16:02.564Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:16:03.855Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:16:48.225Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:16:49.324Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:02.737Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:03.668Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:25.730Z","action":"ADMIN_UPDATE_CONFIG","details":"Set prices: Protect 15, Verify 3","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:35.810Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:36.810Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:38.549Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:39.375Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:17:54.896Z","action":"BUY_CREDITS","details":"User purchased 50 credits. New balance: 50","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:18:13.753Z","action":"VERIFY_FILE","details":"Verified file: 1765343475615_IMG_1963.JPEG (Valid)","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:20:21.908Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:20:22.728Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:20:23.640Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:20:23.924Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:22:29.260Z","action":"PROTECT_FILE","details":"Saved file: 1765365747471_1765072602708_Marañito-01.jpeg","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:22:54.556Z","action":"VERIFY_FILE","details":"Verified file: 1765365747471_1765072602708_Marañito-01.jpeg (Valid)","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:25:36.693Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:25:36.976Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:25:38.464Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:25:38.931Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:25:40.016Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:25:40.850Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:26:12.847Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:26:13.309Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:26:38.116Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:26:39.327Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:31:41.297Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:31:42.246Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:32:17.716Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:32:18.560Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:45:08.772Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:45:09.095Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:45:24.407Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:45:25.363Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:47:39.093Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:47:39.525Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:48:07.669Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:48:08.049Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:48:09.414Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:48:10.634Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:49:04.828Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:49:06.193Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T11:49:35.652Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:41:40.324Z","action":"BUY_CREDITS","details":"User purchased 100 credits for $100. New balance: 129","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:41:44.650Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:41:45.670Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:42:43.682Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:42:44.611Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:51:25.413Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T12:51:25.825Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:42:55.496Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:42:56.715Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:43:23.679Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:43:24.252Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:43:25.470Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:43:25.677Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:43:57.502Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:43:58.426Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:05.894Z","action":"BUY_CREDITS","details":"User purchased 10 credits for $15. New balance: 139","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:17.559Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:18.286Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:33.708Z","action":"PROTECT_FILE","details":"Saved file: 1765388671806_1765072384684_Socabum-01.jpeg","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:52.234Z","action":"VERIFY_FILE","details":"Verified file: 1765388671806_1765072384684_Socabum-01.jpeg (Valid)","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:58.736Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:44:59.207Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:45:00.954Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
+{"timestamp":"2025-12-10T17:45:01.231Z","action":"DASHBOARD_ACCESS","details":"User viewed dashboard","user":"marcpedrero@gmail.com"}
