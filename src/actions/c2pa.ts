@@ -7,10 +7,11 @@ import { supabase, supabaseAdmin } from '@/lib/supabase';
 import { currentUser } from '@clerk/nextjs/server';
 
 // Dev Config: If true, we skip actual cryptographic signing if it fails (fallback)
-const ALLOW_INSECURE_DEV_FALLBACK = true;
+// Dev Config: If true, we skip actual cryptographic signing if it fails (fallback)
+const ALLOW_INSECURE_DEV_FALLBACK = false; // DISABLED: We want real errors now
 
 // Paths to certs
-const CERT_PATH = path.join(process.cwd(), 'c2pa_certs', 'certificate.crt');
+const CERT_PATH = path.join(process.cwd(), 'c2pa_certs', 'chain.crt'); // Use Full Chain
 const KEY_PATH = path.join(process.cwd(), 'c2pa_certs', 'private.key');
 
 interface SignResult {
@@ -169,7 +170,7 @@ export async function verifyAction(formData: FormData): Promise<{ success: boole
         if (isImage) {
             console.log('[C2PA] Verifying Image in memory...');
             const result = await c2pa.read({ buffer, mimeType });
-            report = result?.manifest;
+            report = result?.active_manifest;
         } else if (isPdf) {
             console.log('[C2PA] Verifying PDF in /tmp...');
             const tempInput = path.join('/tmp', `verify_${Date.now()}.pdf`);
