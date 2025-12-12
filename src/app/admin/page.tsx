@@ -2,17 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { Settings, Save, User as UserIcon, CreditCard, Activity, List, RefreshCw, Lock, AlertTriangle, Users, Plus, Minus, TrendingUp, TrendingDown } from 'lucide-react';
+import { Settings, Save, User as UserIcon, CreditCard, Activity, List, RefreshCw, Lock, AlertTriangle, Users, TrendingUp, TrendingDown, Search, PenSquare, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
-import { getLogs, ActivityLog, adminGetAllUsers, adminUpdateUser, getConfig, updateConfig, UserProfile, AppConfig, getFinancialStats } from '@/app/actions';
+import { getLogs, ActivityLog, adminGetAllUsers, adminUpdateUser, getConfig, updateConfig, UserProfile, AppConfig, getFinancialStats, clearActivityLogs } from '@/app/actions';
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
-import { useCredits } from '@/components/Providers';
+import { useCredits, useLanguage } from '@/components/Providers';
+import EditUserModal from '@/components/EditUserModal';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 const ADMIN_EMAIL = 'marcpedrero@gmail.com';
 
 export default function AdminPage() {
     const { user, isLoaded } = useUser();
     const { refreshCredits } = useCredits();
+    const { t } = useLanguage();
 
     const [activeTab, setActiveTab] = useState<'settings' | 'logs' | 'users'>('logs');
 
@@ -27,6 +30,8 @@ export default function AdminPage() {
     // Users State
     const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
 
     // Revenue State
     const [stats, setStats] = useState({ revenue: 0, momGrowth: 0, dailyTrend: [] as { date: string, value: number }[] });
@@ -91,7 +96,7 @@ export default function AdminPage() {
         setIsSavingConfig(true);
         await updateConfig(config);
         setIsSavingConfig(false);
-        alert('Global Pricing Updated');
+        alert(t('admin.settings.save_success'));
     };
 
     const handleUpdateUser = async (email: string, changes: Partial<UserProfile>) => {
@@ -104,6 +109,17 @@ export default function AdminPage() {
         }
     };
 
+    const [showClearLogsModal, setShowClearLogsModal] = useState(false);
+    const [isClearingLogs, setIsClearingLogs] = useState(false);
+
+    const handleClearLogs = async () => {
+        setIsClearingLogs(true);
+        await clearActivityLogs();
+        await loadLogs();
+        setIsClearingLogs(false);
+        setShowClearLogsModal(false);
+    };
+
     if (!isLoaded) return <div className="p-10 text-center">Loading...</div>;
 
     return (
@@ -113,11 +129,11 @@ export default function AdminPage() {
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
                     <div className="bg-red-50 p-8 rounded-2xl text-center border border-red-100">
                         <Lock size={48} className="text-red-400 mx-auto mb-4" />
-                        <h1 className="text-2xl font-bold text-red-900 mb-2">Acceso Restringido</h1>
-                        <p className="text-red-700 mb-6">Debes iniciar sesión para acceder al panel de administración.</p>
+                        <h1 className="text-2xl font-bold text-red-900 mb-2">{t('admin.access_denied')}</h1>
+                        <p className="text-red-700 mb-6">{t('admin.login_required')}</p>
                         <SignInButton mode="modal">
                             <button className="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700 transition">
-                                Iniciar Sesión
+                                {t('admin.btn.login')}
                             </button>
                         </SignInButton>
                     </div>
@@ -127,8 +143,8 @@ export default function AdminPage() {
                 <div className="w-full max-w-5xl px-4 mt-12 mb-20 text-slate-900">
                     <div className="flex justify-between items-center mb-6">
                         <div>
-                            <h1 className="text-3xl font-bold mb-2">Panel de Administrador</h1>
-                            <p className="text-slate-500">Gestión de sistema, precios y auditoría.</p>
+                            <h1 className="text-3xl font-bold mb-2">{t('nav.admin')}</h1>
+                            <p className="text-slate-500">{t('admin.description')}</p>
                         </div>
 
                         <div className="flex bg-slate-100 p-1 rounded-lg">
@@ -137,21 +153,21 @@ export default function AdminPage() {
                                     onClick={() => setActiveTab('settings')}
                                     className={clsx("px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2", activeTab === 'settings' ? "bg-white shadow text-slate-900" : "text-slate-500 hover:text-slate-700")}
                                 >
-                                    <Settings size={16} /> Configuración
+                                    <Settings size={16} /> {t('admin.tab.settings')}
                                 </button>
                             )}
                             <button
                                 onClick={() => setActiveTab('logs')}
                                 className={clsx("px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2", activeTab === 'logs' ? "bg-white shadow text-slate-900" : "text-slate-500 hover:text-slate-700")}
                             >
-                                <Activity size={16} /> Activity Log
+                                <Activity size={16} /> {t('admin.tab.logs')}
                             </button>
                             {isAdmin && (
                                 <button
                                     onClick={() => setActiveTab('users')}
                                     className={clsx("px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2", activeTab === 'users' ? "bg-white shadow text-slate-900" : "text-slate-500 hover:text-slate-700")}
                                 >
-                                    <Users size={16} /> Usuarios
+                                    <Users size={16} /> {t('admin.tab.users')}
                                 </button>
                             )}
                         </div>
@@ -160,36 +176,41 @@ export default function AdminPage() {
                     {/* REVENUE SUMMARY CARD */}
                     {isAdmin && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            {/* CARD 1: REVENUE SUMMARY */}
-                            <div className="glass-panel p-6 bg-white border-l-4 border-l-emerald-500 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden">
+                            {/* CARD 1: REVENUE SUMMARY (Refreshed) */}
+                            <div className="glass-panel p-6 bg-white border-l-4 border-l-indigo-600 shadow-md flex flex-col justify-between h-36 relative overflow-hidden group hover:shadow-lg transition-all">
                                 <div className="z-10 relative">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Revenue</p>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
+                                            <CreditCard size={14} />
+                                        </div>
+                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{t('admin.rev.title')}</p>
                                     </div>
-                                    <h2 className="text-3xl font-bold text-slate-900">${stats.revenue.toFixed(2)}</h2>
+                                    <h2 className="text-4xl font-black text-slate-800 tracking-tight">${stats.revenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
 
                                     {/* MoM Indicator */}
-                                    <div className="flex items-center gap-2 mt-2">
+                                    <div className="flex items-center gap-2 mt-3">
                                         <div className={clsx(
-                                            "flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full",
-                                            stats.momGrowth >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
+                                            "flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border",
+                                            stats.momGrowth >= 0
+                                                ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                                                : "bg-red-50 text-red-700 border-red-100"
                                         )}>
                                             {stats.momGrowth >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                                            {Math.abs(stats.momGrowth).toFixed(1)}%
-                                            <span className="font-normal opacity-80 pl-1">vs last month</span>
+                                            {Math.abs(stats.momGrowth).toFixed(0)}%
+                                            <span className="font-normal opacity-70 pl-1 text-[10px] uppercase">{t('admin.rev.mom')}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="absolute right-4 top-4 opacity-10 pointer-events-none">
-                                    <CreditCard size={100} />
+                                <div className="absolute -right-6 -bottom-6 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity rotate-12">
+                                    <CreditCard size={140} />
                                 </div>
                             </div>
 
                             {/* CARD 2: SALES CHART */}
                             <div className="glass-panel p-6 bg-white border-l-4 border-l-blue-500 shadow-sm md:col-span-2 h-32 relative overflow-hidden flex flex-col justify-between">
                                 <div className="flex justify-between items-start mb-2 z-10 relative">
-                                    <h3 className="text-slate-500 text-xs font-bold uppercase tracking-wider">Daily Credits Sales (30 Days)</h3>
-                                    <p className="text-xs text-slate-400 font-mono">Last updated: {new Date().toLocaleTimeString()}</p>
+                                    <h3 className="text-slate-500 text-xs font-bold uppercase tracking-wider">{t('admin.chart.title')}</h3>
+                                    <p className="text-xs text-slate-400 font-mono">{t('admin.chart.updated')} {new Date().toLocaleTimeString()}</p>
                                 </div>
 
                                 <div className="w-full h-full flex items-end relative z-10">
@@ -222,7 +243,7 @@ export default function AdminPage() {
                                             })()}
                                         </svg>
                                     ) : (
-                                        <div className="w-full text-center text-slate-400 text-xs py-4">No data available</div>
+                                        <div className="w-full text-center text-slate-400 text-xs py-4">{t('admin.chart.no_data')}</div>
                                     )}
                                 </div>
                             </div>
@@ -231,7 +252,7 @@ export default function AdminPage() {
 
                     {!isAdmin && activeTab === 'settings' && (
                         <div className="p-4 bg-red-50 text-red-700 rounded-lg mb-4 flex items-center gap-2">
-                            <AlertTriangle size={20} /> Access Denied: Only {ADMIN_EMAIL} can edit settings.
+                            <AlertTriangle size={20} /> {t('admin.settings.access_denied', { email: ADMIN_EMAIL })}
                         </div>
                     )}
 
@@ -242,29 +263,29 @@ export default function AdminPage() {
                                 <div className="p-2 bg-green-500/10 rounded-lg text-green-600">
                                     <CreditCard size={24} />
                                 </div>
-                                <h2 className="text-xl font-bold text-slate-800">Precios Globales (Créditos)</h2>
+                                <h2 className="text-xl font-bold text-slate-800">{t('admin.settings.title')}</h2>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-500 mb-2">Coste: Protección de Archivo</label>
+                                    <label className="block text-sm font-bold text-slate-500 mb-2">{t('admin.settings.cost_protect')}</label>
                                     <input
                                         type="number"
                                         value={config.protectionCost}
                                         onChange={(e) => setConfig({ ...config, protectionCost: Number(e.target.value) })}
                                         className="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 font-bold"
                                     />
-                                    <p className="text-xs text-slate-400 mt-1">Créditos deducidos al proteger.</p>
+                                    <p className="text-xs text-slate-400 mt-1">{t('admin.settings.desc_protect')}</p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-500 mb-2">Coste: Verificación</label>
+                                    <label className="block text-sm font-bold text-slate-500 mb-2">{t('admin.settings.cost_verify')}</label>
                                     <input
                                         type="number"
                                         value={config.verificationCost}
                                         onChange={(e) => setConfig({ ...config, verificationCost: Number(e.target.value) })}
                                         className="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 font-bold"
                                     />
-                                    <p className="text-xs text-slate-400 mt-1">Créditos deducidos al verificar.</p>
+                                    <p className="text-xs text-slate-400 mt-1">{t('admin.settings.desc_verify')}</p>
                                 </div>
                             </div>
 
@@ -275,7 +296,7 @@ export default function AdminPage() {
                                     className="px-8 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold flex items-center gap-2 shadow-lg transition-all"
                                 >
                                     <Save size={20} />
-                                    {isSavingConfig ? 'Guardando...' : 'Guardar Precios'}
+                                    {isSavingConfig ? t('btn.saving') : t('admin.settings.save')}
                                 </button>
                             </div>
                         </div>
@@ -287,27 +308,36 @@ export default function AdminPage() {
                         <div className="glass-panel p-6 bg-white border border-slate-200 min-h-[500px]">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-bold flex items-center gap-2">
-                                    <List className="text-slate-400" /> Registro de Actividad
+                                    <List className="text-slate-400" /> {t('admin.tab.logs')}
                                 </h2>
-                                <button onClick={loadLogs} className="p-2 text-slate-400 hover:text-blue-500 transition-colors" title="Reload">
-                                    <RefreshCw size={20} className={clsx(isLoadingLogs && "animate-spin")} />
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => setShowClearLogsModal(true)}
+                                        className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        title={t('btn.clear_logs')}
+                                    >
+                                        <Trash2 size={20} />
+                                    </button>
+                                    <button onClick={loadLogs} className="p-2 text-slate-400 hover:text-blue-500 transition-colors" title={t('btn.reload')}>
+                                        <RefreshCw size={20} className={clsx(isLoadingLogs && "animate-spin")} />
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="overflow-hidden rounded-lg border border-slate-200">
                                 <table className="w-full text-sm text-left">
                                     <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
                                         <tr>
-                                            <th className="px-4 py-3">Timestamp</th>
-                                            <th className="px-4 py-3">Action</th>
-                                            <th className="px-4 py-3">User</th>
-                                            <th className="px-4 py-3">Details</th>
+                                            <th className="px-4 py-3">{t('tbl.timestamp')}</th>
+                                            <th className="px-4 py-3">{t('tbl.action')}</th>
+                                            <th className="px-4 py-3">{t('tbl.user')}</th>
+                                            <th className="px-4 py-3">{t('tbl.details')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
                                         {logs.length === 0 ? (
                                             <tr>
-                                                <td colSpan={4} className="px-4 py-8 text-center text-slate-400 italic">No logs found.</td>
+                                                <td colSpan={4} className="px-4 py-8 text-center text-slate-400 italic">{t('admin.logs.empty')}</td>
                                             </tr>
                                         ) : (
                                             logs.map((log, i) => (
@@ -338,65 +368,106 @@ export default function AdminPage() {
                     {/* USERS TAB */}
                     {activeTab === 'users' && isAdmin && (
                         <div className="glass-panel p-6 bg-white border border-slate-200 min-h-[500px]">
-                            <div className="flex justify-between items-center mb-6">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-xl font-bold flex items-center gap-2">
-                                        <Users className="text-slate-400" /> Gestión de Usuarios y Créditos
+                                        <Users className="text-slate-400" /> {t('admin.users.title')}
                                     </h2>
                                     <p className="text-slate-500 text-sm mt-1">
-                                        Total Usuarios: {allUsers.length} |
-                                        Total Créditos en Circulación: {allUsers.reduce((acc, u) => acc + u.credits, 0)}
+                                        <span className="font-bold text-slate-700">{allUsers.length}</span> {t('admin.users.count')}
                                     </p>
                                 </div>
-                                <button onClick={loadUsers} className="p-2 text-slate-400 hover:text-blue-500 transition-colors">
-                                    <RefreshCw size={20} className={clsx(isLoadingUsers && "animate-spin")} />
-                                </button>
+
+                                <div className="flex gap-2 w-full md:w-auto">
+                                    <div className="relative flex-1 md:w-64">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                        <input
+                                            type="text"
+                                            placeholder={t('admin.users.search')}
+                                            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                        />
+                                    </div>
+                                    <button onClick={loadUsers} className="p-2 text-slate-400 hover:text-blue-500 transition-colors bg-slate-50 rounded-lg border border-slate-200">
+                                        <RefreshCw size={20} className={clsx(isLoadingUsers && "animate-spin")} />
+                                    </button>
+                                </div>
                             </div>
 
-                            <div className="overflow-hidden rounded-lg border border-slate-200">
+                            <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
                                 <table className="w-full text-sm text-left">
-                                    <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
+                                    <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs border-b border-slate-200">
                                         <tr>
-                                            <th className="px-4 py-3">Email</th>
-                                            <th className="px-4 py-3 text-center">Créditos</th>
-                                            <th className="px-4 py-3 text-center">Descuento (%)</th>
-                                            <th className="px-4 py-3 text-center">Gestión</th>
+                                            <th className="px-6 py-4">{t('tbl.user')}</th>
+                                            <th className="px-6 py-4">{t('tbl.status')}</th>
+                                            <th className="px-6 py-4 text-center">{t('tbl.credits')}</th>
+                                            <th className="px-6 py-4 text-center">{t('tbl.discount')}</th>
+                                            <th className="px-6 py-4 text-right">{t('tbl.actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
-                                        {allUsers.map((u) => (
-                                            <tr key={u.email} className="hover:bg-slate-50">
-                                                <td className="px-4 py-3 font-medium text-slate-900">{u.email}</td>
-                                                <td className="px-4 py-3 text-center">
-                                                    <span className="font-bold text-lg text-slate-700">{u.credits}</span>
-                                                </td>
-                                                <td className="px-4 py-3 text-center">
-                                                    <div className="flex items-center justify-center gap-1">
-                                                        <input
-                                                            type="number"
-                                                            className="w-12 border rounded px-1 py-0.5 text-center text-xs"
-                                                            value={u.discount}
-                                                            onChange={(e) => handleUpdateUser(u.email, { discount: Number(e.target.value) })}
-                                                        />
-                                                        <span className="text-xs text-slate-400">%</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-3 flex justify-center gap-2">
-                                                    <button
-                                                        onClick={() => handleUpdateUser(u.email, { credits: u.credits + 10 })}
-                                                        className="p-1 bg-green-100 text-green-700 rounded hover:bg-green-200" title="+10 Credits"
-                                                    >
-                                                        <Plus size={16} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleUpdateUser(u.email, { credits: Math.max(0, u.credits - 10) })}
-                                                        className="p-1 bg-red-100 text-red-700 rounded hover:bg-red-200" title="-10 Credits"
-                                                    >
-                                                        <Minus size={16} />
-                                                    </button>
+                                        {allUsers.filter(u => u.email.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
+                                            <tr>
+                                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                                                    {t('admin.users.empty', { query: searchQuery })}
                                                 </td>
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            allUsers
+                                                .filter(u => u.email.toLowerCase().includes(searchQuery.toLowerCase()))
+                                                .map((u) => (
+                                                    <tr key={u.email} className="hover:bg-slate-50/80 transition-colors group">
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-sm">
+                                                                    {u.email.substring(0, 2).toUpperCase()}
+                                                                </div>
+                                                                <div>
+                                                                    <div className="font-bold text-slate-700">{u.email}</div>
+                                                                    <div className="text-xs text-slate-400 font-mono">ID: {u.email.split('@')[0]}</div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">
+                                                                {t('status.active')}
+                                                            </span>
+                                                            {u.created_at && (
+                                                                <div className="text-[10px] text-slate-400 mt-1">
+                                                                    {t('lbl.since')}: {new Date(u.created_at).toLocaleDateString()}
+                                                                </div>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-center">
+                                                            <span className={clsx(
+                                                                "font-bold text-lg",
+                                                                u.credits === 0 ? "text-red-500" : "text-slate-700"
+                                                            )}>
+                                                                {u.credits}
+                                                            </span>
+                                                            <span className="text-xs text-slate-400 ml-1">{t('lbl.credits')}</span>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-center">
+                                                            {u.discount > 0 ? (
+                                                                <span className="px-2 py-1 rounded text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200">
+                                                                    {u.discount}% {t('lbl.off')}
+                                                                </span>
+                                                            ) : (
+                                                                <span className="text-slate-400 text-xs">-</span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-right">
+                                                            <button
+                                                                onClick={() => setEditingUser(u)}
+                                                                className="px-3 py-1.5 bg-white border border-slate-300 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50 hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm flex items-center gap-2 ml-auto"
+                                                            >
+                                                                <PenSquare size={14} /> {t('btn.manage')}
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -404,6 +475,23 @@ export default function AdminPage() {
                     )}
                 </div>
             </SignedIn>
+
+            <EditUserModal
+                isOpen={!!editingUser}
+                onClose={() => setEditingUser(null)}
+                user={editingUser}
+                onSave={handleUpdateUser}
+            />
+
+            <ConfirmationModal
+                isOpen={showClearLogsModal}
+                onClose={() => setShowClearLogsModal(false)}
+                onConfirm={handleClearLogs}
+                title={t('btn.clear_logs')}
+                message={t('msg.confirm_clear_logs')}
+                isDestructive={true}
+                isLoading={isClearingLogs}
+            />
         </>
     );
 }

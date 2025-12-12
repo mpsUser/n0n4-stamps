@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, AlertTriangle } from 'lucide-react';
+import { X, AlertTriangle, Loader2 } from 'lucide-react'; // Added Loader2
+import { clsx } from 'clsx'; // Added clsx
 
 interface ConfirmationModalProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface ConfirmationModalProps {
     confirmText?: string;
     cancelText?: string;
     isDestructive?: boolean;
+    isLoading?: boolean; // Add to props definition
 }
 
 export default function ConfirmationModal({
@@ -22,7 +24,8 @@ export default function ConfirmationModal({
     message,
     confirmText = "Confirmar",
     cancelText = "Cancelar",
-    isDestructive = false
+    isDestructive = false,
+    isLoading = false // Default false
 }: ConfirmationModalProps) {
     return (
         <AnimatePresence>
@@ -33,7 +36,7 @@ export default function ConfirmationModal({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={onClose}
+                        onClick={isLoading ? undefined : onClose} // Disable backdrop close if loading
                         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                     >
                         {/* Modal */}
@@ -46,7 +49,8 @@ export default function ConfirmationModal({
                         >
                             <button
                                 onClick={onClose}
-                                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+                                disabled={isLoading} // Disable close button if loading
+                                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <X size={20} />
                             </button>
@@ -61,15 +65,22 @@ export default function ConfirmationModal({
                             <div className="flex gap-3">
                                 <button
                                     onClick={onClose}
-                                    className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+                                    disabled={isLoading} // Disable cancel button if loading
+                                    className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {cancelText}
                                 </button>
                                 <button
                                     onClick={() => { onConfirm(); onClose(); }}
-                                    className={`flex-1 py-2.5 font-bold rounded-xl text-white transition-colors ${isDestructive ? 'bg-red-500 hover:bg-red-600' : 'bg-slate-900 hover:bg-slate-800'}`}
+                                    disabled={isLoading} // Disable confirm button if loading
+                                    className={clsx(
+                                        "flex-1 py-2.5 font-bold rounded-xl text-white transition-colors flex items-center justify-center gap-2",
+                                        isDestructive ? 'bg-red-500 hover:bg-red-600' : 'bg-slate-900 hover:bg-slate-800',
+                                        isLoading && 'opacity-70 cursor-not-allowed' // Styling for disabled state
+                                    )}
                                 >
-                                    {confirmText}
+                                    {isLoading && <Loader2 size={18} className="animate-spin" />} {/* Spinner */}
+                                    {isLoading ? "Procesando..." : confirmText} {/* Text change */}
                                 </button>
                             </div>
                         </motion.div>

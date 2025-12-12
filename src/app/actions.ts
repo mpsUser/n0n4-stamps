@@ -37,6 +37,7 @@ export interface UserProfile {
     email: string;
     credits: number;
     discount: number; // 0-100
+    created_at?: string;
 }
 
 export interface AppConfig {
@@ -189,13 +190,18 @@ export async function simulateBuyCredits(amount: number, price: number) {
 
     if (error) return { success: false, message: "Purchase failed" };
 
-    // 2. Record Transaction
-    await supabase.from('transactions').insert({
+    // 2. Record Transaction (Use Admin to ensure write even if RLS is strict)
+    const { error: txError } = await supabaseAdmin.from('transactions').insert({
         user_email: email,
         amount_credits: amount,
         amount_paid: price,
         currency: 'USD'
     });
+
+    if (txError) {
+        console.error("Transaction Record Failed:", txError);
+        // We do not fail the whole request as credits were added, but revenue might miss this entry.
+    }
 
     await logActivity('BUY_CREDITS', `User purchased ${amount} credits for $${price}. New balance: ${newBalance}`, email);
     return { success: true, newBalance };
@@ -361,6 +367,54 @@ export async function logActivity(action: string, details: string, userEmail: st
     // Removed local file logging for Cloud Compatibility
 }
 
+export async function clearActivityLogs() {
+    const user = await currentUser();
+    if (!user || !user.primaryEmailAddress) return { success: false, error: "Unauthorized" };
+
+    const email = user.primaryEmailAddress.emailAddress;
+    const isAdmin = email === ADMIN_EMAIL;
+
+    let error;
+
+    if (isAdmin) {
+        // Admin: Delete ALL logs
+        // Using Supabase Admin to ensure we can delete everything
+        const { error: delError } = await supabaseAdmin
+            .from('activity_logs')
+            .delete()
+            .neq('id', '00000000-0000-0000-0000-000000000000'); // Hack to delete all rows since delete() requires a filter usually, or use non-empty filter
+        // Actually, better to use a condition that is always true or specific Logic. 
+        // supabase.from('...').delete().gt('id', 0) doesn't work well with UUID.
+        // Let's use user_email is not null which should be all of them.
+
+        const { error: adminDelError } = await supabaseAdmin
+            .from('activity_logs')
+            .delete()
+            .neq('action', 'KEEP_ALIVE'); // Deletes everything not 'KEEP_ALIVE' (assuming we don't have that). Or just .gt('timestamp', '1970-01-01')
+
+        error = adminDelError;
+    } else {
+        // User: Delete OWN logs only
+        // Using standard client which should have RLS or user_email check
+        const { error: userDelError } = await supabase
+            .from('activity_logs')
+            .delete()
+            .eq('user_email', email);
+
+        error = userDelError;
+    }
+
+    if (error) {
+        console.error("Clear logs failed:", error);
+        return { success: false, error: "Failed to clear logs" };
+    }
+
+    // Add a new log entry stating logs were cleared
+    await logActivity('CLEAR_LOGS', `Activity logs cleared by ${isAdmin ? 'Admin' : 'User'}`, email);
+
+    return { success: true };
+}
+
 export async function getLogs() {
     const user = await currentUser();
     if (!user) return [];
@@ -413,8 +467,32 @@ export async function getFinancialStats() {
     if (error || !data) return { revenue: 0, momGrowth: 0, dailyTrend: [] };
 
     // 1. Total Revenue
-    const totalRevenue = data.reduce((acc, curr) => acc + (parseFloat(curr.amount_paid) || 0), 0);
-    console.log(`[FinancialStats] Calculated Revenue: ${totalRevenue}`);
+    let totalRevenue = data.reduce((acc, curr) => acc + (parseFloat(curr.amount_paid) || 0), 0);
+    console.log(`[FinancialStats] Calculated Revenue (from DB): ${totalRevenue}`);
+
+    // FALLBACK: If Transactions RLS blocks data, try parsing Activity Logs (which are often public/anon)
+    if (totalRevenue === 0 && isAdmin) {
+        console.log('[FinancialStats] Attempting Fallback via Activity Logs...');
+        const { data: logs } = await supabase.from('activity_logs')
+            .select('details, timestamp')
+            .eq('action', 'BUY_CREDITS');
+
+        if (logs && logs.length > 0) {
+            let logRevenue = 0;
+            logs.forEach(log => {
+                // details format: "User purchased 10 credits for $15. New balance: 20"
+                const match = log.details.match(/purchased \d+ credits for \$(\d+(\.\d+)?)/);
+                if (match && match[1]) {
+                    logRevenue += parseFloat(match[1]);
+                }
+            });
+            console.log(`[FinancialStats] Fallback Revenue: ${logRevenue}`);
+            if (logRevenue > 0) {
+                totalRevenue = logRevenue;
+                // We could also populate data array for trends if needed, but keeping it simple for Total.
+            }
+        }
+    }
 
     // 2. MoM Growth
     const now = new Date();

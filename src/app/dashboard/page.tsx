@@ -2,16 +2,19 @@
 
 import Navbar from '@/components/Navbar';
 import { useLanguage, useCredits } from '@/components/Providers';
-import { CreditCard, FileUp, FolderOpen, TrendingUp, ShieldCheck, Activity, Leaf, ShoppingCart } from 'lucide-react';
+import { CreditCard, FileUp, FolderOpen, TrendingUp, ShieldCheck, Activity, Leaf, ShoppingCart, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { logActivity, getUserUploads, getLogs } from '@/app/actions';
+import { logActivity, getUserUploads, getLogs, clearActivityLogs } from '@/app/actions';
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { DollarSign } from 'lucide-react';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 export default function DashboardPage() {
     const { t } = useLanguage();
     const { user } = useUser();
+    const [showClearModal, setShowClearModal] = useState(false);
+    const [isClearing, setIsClearing] = useState(false);
 
     // Log access on mount
     useEffect(() => {
@@ -30,27 +33,37 @@ export default function DashboardPage() {
         carbon: '0 g'
     });
 
+    async function loadServerData() {
+        if (!user) return;
+        const uploads = await getUserUploads();
+        const logs = await getLogs();
+
+        const protectedCount = uploads.length;
+        const verifications = logs.filter(l => l.action.includes('VERIFY')).length;
+
+        const sizeMB = protectedCount * 3.2; // Mock avg size
+        const carbon = (protectedCount * 0.5).toFixed(1) + 'g';
+
+        setStats({
+            protected: protectedCount,
+            saved: sizeMB.toFixed(0) + ' MB',
+            verifications,
+            score: 95 + Math.min(protectedCount, 5), // dynamic score
+            carbon
+        });
+    }
+
     useEffect(() => {
-        async function loadServerData() {
-            const uploads = await getUserUploads();
-            const logs = await getLogs();
-
-            const protectedCount = uploads.length;
-            const verifications = logs.filter(l => l.action.includes('VERIFY')).length;
-
-            const sizeMB = protectedCount * 3.2; // Mock avg size
-            const carbon = (protectedCount * 0.5).toFixed(1) + 'g';
-
-            setStats({
-                protected: protectedCount,
-                saved: sizeMB.toFixed(0) + ' MB',
-                verifications,
-                score: 95 + Math.min(protectedCount, 5), // dynamic score
-                carbon
-            });
-        }
-        if (user) loadServerData();
+        loadServerData();
     }, [user]);
+
+    const handleClearLogs = async () => {
+        setIsClearing(true);
+        await clearActivityLogs();
+        await loadServerData(); // Refresh stats (should go to 0 verifications etc)
+        setIsClearing(false);
+        setShowClearModal(false);
+    };
 
     return (
         <>
@@ -172,7 +185,30 @@ export default function DashboardPage() {
                             <p className="text-slate-500">History</p>
                         </div>
                     </Link>
+
+                    <button
+                        onClick={() => setShowClearModal(true)}
+                        className="glass-panel p-6 flex items-center gap-4 hover:bg-red-50 transition-colors group bg-white text-left w-full"
+                    >
+                        <div className="w-12 h-12 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Trash2 size={24} />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-lg text-slate-900">{t('btn.clear_logs')}</h3>
+                            <p className="text-slate-500">Reset stats</p>
+                        </div>
+                    </button>
                 </div>
+
+                <ConfirmationModal
+                    isOpen={showClearModal}
+                    onClose={() => setShowClearModal(false)}
+                    onConfirm={handleClearLogs}
+                    title={t('btn.clear_logs')}
+                    message={t('msg.confirm_reset_stats')}
+                    isDestructive={true}
+                    isLoading={isClearing}
+                />
 
             </div>
         </>

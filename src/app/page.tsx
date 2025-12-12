@@ -13,8 +13,17 @@ export default function Home() {
       <Navbar />
 
       <div className="flex flex-col items-center justify-center flex-1 w-full max-w-5xl px-4 text-center mt-20">
-        <div className="mb-8 p-3 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 dark:text-blue-400 text-sm font-medium">
+        <div className="mb-4 p-3 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 dark:text-blue-400 text-sm font-medium">
           Protocolo C2PA &bull; {t('footer')}
+        </div>
+
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs font-bold mb-8 shadow-sm">
+          <span className="flex items-center gap-1">
+            <Shield size={12} className="fill-current" />
+            {t('home.badge.eu_act')}
+          </span>
+          <span className="w-px h-3 bg-yellow-300 mx-1 opacity-50"></span>
+          <span className="opacity-80 font-normal">{t('home.badge.desc')}</span>
         </div>
 
         <h1 className="text-4xl font-bold mb-6 tracking-tight text-slate-900 leading-tight max-w-4xl mx-auto">

@@ -10,7 +10,7 @@ type Language = 'es' | 'en';
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: (key: string) => string;
+    t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -39,8 +39,19 @@ const translations: Record<string, Record<Language, string>> = {
     'nav.dashboard': { es: 'Panel', en: 'Dashboard' },
     'nav.help': { es: 'Ayuda', en: 'Help' },
     'nav.admin': { es: 'Admin', en: 'Admin' },
+    'btn.reload': { es: 'Recargar', en: 'Reload' },
+    'btn.manage': { es: 'Gestionar', en: 'Manage' },
+    'btn.clear_logs': { es: 'Borrar Historial', en: 'Clear History' },
+    'btn.clearing': { es: 'Borrando...', en: 'Clearing...' },
+
+    // Messages
+    'msg.confirm_clear_logs': { es: '¿Estás seguro de que quieres borrar TODOS los registros del sistema? Esta acción no se puede deshacer.', en: 'Are you sure you want to delete ALL system logs? This action cannot be undone.' },
+    'msg.confirm_reset_stats': { es: 'Esto borrará tu historial de actividad y reiniciará tus estadísticas. ¿Continuar?', en: 'This will clear your activity history and reset your statistics. Continue?' },
+    'msg.logs_cleared': { es: 'Registros borrados correctamente.', en: 'Logs cleared successfully.' },
 
     // Home
+    'home.badge.eu_act': { es: 'Cumplimiento UE AI Act', en: 'EU AI Act Compliance' },
+    'home.badge.desc': { es: 'Listo para requisito de lectura mecánica 2026', en: 'Ready for 2026 Machine-Readable Requirement' },
     'home.moto': { es: 'Uso responsable de la IA', en: 'Responsible use of AI' }, // As requested: "Uso responsable de la IA"
     'home.sub': { es: 'para Información Documentada', en: 'for Documented Information' }, // Keeping sub
     'home.desc': {
@@ -112,6 +123,49 @@ const translations: Record<string, Record<Language, string>> = {
     'meta.date': { es: 'Fecha de Creación', en: 'Creation Date' },
     'meta.type': { es: 'Tipo de IA', en: 'AI Type' },
     'meta.key': { es: 'Clave C2PA (Simulada)', en: 'C2PA Key (Simulated)' },
+    // Admin Panel
+    'admin.tab.settings': { es: 'Configuración', en: 'Settings' },
+    'admin.tab.logs': { es: 'Registros', en: 'Activity Logs' },
+    'admin.tab.users': { es: 'Usuarios', en: 'Users' },
+    'admin.access_denied': { es: 'Acceso Denegado', en: 'Access Denied' },
+    'admin.login_required': { es: 'Debes iniciar sesión para acceder.', en: 'You must sign in to access.' },
+    'admin.btn.login': { es: 'Iniciar Sesión', en: 'Sign In' },
+
+    'admin.users.title': { es: 'Gestión de Usuarios', en: 'User Management' },
+    'admin.users.count': { es: 'usuarios registrados.', en: 'registered users.' },
+    'admin.users.search': { es: 'Buscar por email...', en: 'Search by email...' },
+    'admin.users.empty': { es: 'No se encontraron usuarios', en: 'No users found' },
+    'admin.users.edit': { es: 'Editar Usuario', en: 'Edit User' },
+
+    'admin.settings.title': { es: 'Precios Globales (Créditos)', en: 'Global Pricing (Credits)' },
+    'admin.settings.cost_protect': { es: 'Coste: Protección', en: 'Cost: Protection' },
+    'admin.settings.cost_verify': { es: 'Coste: Verificación', en: 'Cost: Verification' },
+    'admin.settings.desc_protect': { es: 'Créditos deducidos al proteger.', en: 'Credits deducted when protecting.' },
+    'admin.settings.desc_verify': { es: 'Créditos deducidos al verificar.', en: 'Credits deducted when verifying.' },
+    'admin.settings.save': { es: 'Guardar Precios', en: 'Save Pricing' },
+
+    'admin.rev.title': { es: 'Ingresos Totales', en: 'Total Revenue' },
+    'admin.rev.mom': { es: 'vs mes anterior', en: 'vs last month' },
+    'admin.chart.title': { es: 'Ventas Diarias (30 D)', en: 'Daily Sales (30 Days)' },
+    'admin.chart.updated': { es: 'Actualizado:', en: 'Updated:' },
+
+    // Common Tables
+    'tbl.user': { es: 'Usuario', en: 'User' },
+    'tbl.status': { es: 'Estado', en: 'Status' },
+    'tbl.credits': { es: 'Créditos', en: 'Credits' },
+    'tbl.discount': { es: 'Descuento', en: 'Discount' },
+    'tbl.actions': { es: 'Acciones', en: 'Actions' },
+    'tbl.date': { es: 'Fecha', en: 'Date' },
+    'tbl.details': { es: 'Detalles', en: 'Details' },
+
+    // Common UI (Buttons/Labels)
+    // btn.manage is already defined above
+    'btn.save': { es: 'Guardar Cambios', en: 'Save Changes' },
+    'btn.saving': { es: 'Guardando...', en: 'Saving...' },
+    'btn.cancel': { es: 'Cancelar', en: 'Cancel' },
+    'status.active': { es: 'Activo', en: 'Active' },
+    'lbl.since': { es: 'Desde', en: 'Since' },
+    'lbl.off': { es: 'OFF', en: 'OFF' },
 };
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -122,10 +176,21 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setMounted(true);
     }, []);
 
-    const t = (key: string) => {
+    const t = (key: string, params?: Record<string, string | number>) => {
         const item = translations[key];
-        if (!item) return key;
-        return item[language] || item['es'];
+        let text = key;
+
+        if (item) {
+            text = item[language] || item['es'];
+        }
+
+        if (params) {
+            Object.entries(params).forEach(([k, v]) => {
+                text = text.replace(new RegExp(`{${k}}`, 'g'), String(v));
+            });
+        }
+
+        return text;
     };
 
     if (!mounted) {
