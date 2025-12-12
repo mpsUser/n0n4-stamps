@@ -11,8 +11,7 @@ import { currentUser } from '@clerk/nextjs/server';
 const ALLOW_INSECURE_DEV_FALLBACK = true; // ENABLED: Auto-fallback for Vercel (where certs are missing)
 
 // Paths to certs
-const CERT_PATH = path.join(process.cwd(), 'c2pa_certs', 'chain.crt'); // Use Full Chain
-const KEY_PATH = path.join(process.cwd(), 'c2pa_certs', 'private.key');
+// removed global constants to allow dynamic pathing
 
 interface SignResult {
     success: boolean;
@@ -39,11 +38,33 @@ export async function signAndUploadAction(formData: FormData, metadata: any): Pr
     let signedBuffer: Buffer = buffer;
     let signingSuccess = false;
 
+    // Determine Certificate Paths (Env Var > Local File)
+    let certPath = path.join(process.cwd(), 'c2pa_certs', 'chain.crt');
+    let keyPath = path.join(process.cwd(), 'c2pa_certs', 'private.key');
+
+    if (process.env.C2PA_CERTIFICATE && process.env.C2PA_PRIVATE_KEY) {
+        console.log('[C2PA] Using Production Env Vars for keys');
+        try {
+            certPath = path.join('/tmp', 'prod_chain.crt');
+            keyPath = path.join('/tmp', 'prod_private.key');
+
+            // Normalize newlines (Vercel env var fix)
+            const certContent = process.env.C2PA_CERTIFICATE.replace(/\\n/g, '\n');
+            const keyContent = process.env.C2PA_PRIVATE_KEY.replace(/\\n/g, '\n');
+
+            await fs.writeFile(certPath, certContent);
+            await fs.writeFile(keyPath, keyContent);
+        } catch (err) {
+            console.error('[C2PA] Failed to write temp certs:', err);
+            // Fallback will naturally occur if these files are empty/missing
+        }
+    }
+
     try {
         // 1. Setup Signer
         const signer = await createTestSigner({
-            certificatePath: CERT_PATH,
-            privateKeyPath: KEY_PATH,
+            certificatePath: certPath,
+            privateKeyPath: keyPath,
         });
 
         // 2. Setup C2PA SDK
