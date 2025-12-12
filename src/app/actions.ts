@@ -281,8 +281,50 @@ export async function getUserUploads() {
         style: item.style,
         lang: item.lang,
         date: item.created_at,
+        email: item.user_email, // Add owner email
         isImage: item.filename.match(/\.(jpeg|jpg|png|webp|gif)$/i) ? true : false
     }));
+}
+
+export async function deleteFile(fileId: string, serverPath: string) {
+    const user = await currentUser();
+    if (!user || !user.primaryEmailAddress) return { success: false, error: "Unauthorized" };
+
+    const email = user.primaryEmailAddress.emailAddress;
+    const isAdmin = email === ADMIN_EMAIL;
+
+    // 1. Verify Ownership (or Admin)
+    let query = supabase.from('uploads').select('user_email').eq('id', fileId).single();
+    if (isAdmin) {
+        // query is fine, admins can read everything anyway via our broad RLS (or lack thereof for anon key if strict RLS off)
+        // ideally use supabaseAdmin to be safe if specific RLS blocking read
+        query = supabaseAdmin.from('uploads').select('user_email').eq('id', fileId).single();
+    }
+
+    const { data: fileRecord, error: fetchError } = await query;
+    if (fetchError || !fileRecord) return { success: false, error: "File not found" };
+
+    if (!isAdmin && fileRecord.user_email !== email) {
+        return { success: false, error: "Unauthorized: You do not own this file" };
+    }
+
+    // 2. Delete from Storage
+    // Must use Admin client to ensure we can delete anyone's file if Admin, or just standard permissions
+    const { error: storageError } = await supabaseAdmin.storage.from('uploads').remove([serverPath]);
+
+    if (storageError) {
+        console.error("Storage delete failed:", storageError);
+        // Continue to delete record anyway? No, might orphaned file.
+        // But if file already gone, we should allow record delete.
+    }
+
+    // 3. Delete from DB
+    const { error: dbError } = await supabaseAdmin.from('uploads').delete().eq('id', fileId);
+
+    if (dbError) return { success: false, error: "Database delete failed" };
+
+    await logActivity('DELETE_FILE', `Deleted file ${fileId} (${serverPath})`, email);
+    return { success: true };
 }
 
 export async function saveUploadRecord(record: Omit<UploadRecord, 'email'>) {
@@ -344,22 +386,89 @@ export async function getLogs() {
 
 export async function getFinancialStats() {
     const user = await currentUser();
-    if (!user) return { revenue: 0 };
+    if (!user) return { revenue: 0, momGrowth: 0, dailyTrend: [] };
 
-    // In a real app, only Admin should see total revenue. 
-    // For now, we show the USER'S total spend if not admin, or ALL revenue if admin.
     const email = user.primaryEmailAddress?.emailAddress;
-    const isAdmin = email === ADMIN_EMAIL;
+    const isAdmin = email && email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-    let query = supabase.from('transactions').select('amount_paid');
+    // Debug: Check if Service Role is active
+    if (isAdmin && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        console.error('[FinancialStats] WARNING: SUPABASE_SERVICE_ROLE_KEY missing. Admin stats will be inaccurate (RLS active).');
+    }
 
-    if (!isAdmin) {
-        query = query.eq('user_email', email);
+    let query;
+    if (isAdmin) {
+        // Use admin client to bypass RLS and get ALL transactions
+        query = supabaseAdmin.from('transactions').select('amount_paid, amount_credits, created_at');
+    } else {
+        query = supabase.from('transactions').select('amount_paid, amount_credits, created_at').eq('user_email', email);
     }
 
     const { data, error } = await query;
-    if (error || !data) return { revenue: 0 };
 
+    console.log(`[FinancialStats] User: ${email}, IsAdmin: ${isAdmin}`);
+    console.log(`[FinancialStats] Transactions found: ${data?.length || 0}`);
+    if (error) console.error('[FinancialStats] Error:', error);
+
+    if (error || !data) return { revenue: 0, momGrowth: 0, dailyTrend: [] };
+
+    // 1. Total Revenue
     const totalRevenue = data.reduce((acc, curr) => acc + (parseFloat(curr.amount_paid) || 0), 0);
-    return { revenue: totalRevenue };
+    console.log(`[FinancialStats] Calculated Revenue: ${totalRevenue}`);
+
+    // 2. MoM Growth
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    // Previous Month Logic (handle Jan -> Dec rollover)
+    const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const prevMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    let currentMonthRevenue = 0;
+    let prevMonthRevenue = 0;
+
+    data.forEach(t => {
+        const d = new Date(t.created_at);
+        const amount = parseFloat(t.amount_paid) || 0;
+
+        if (d.getFullYear() === currentYear && d.getMonth() === currentMonth) {
+            currentMonthRevenue += amount;
+        } else if (d.getFullYear() === prevMonthYear && d.getMonth() === prevMonth) {
+            prevMonthRevenue += amount;
+        }
+    });
+
+    let momGrowth = 0;
+    if (prevMonthRevenue > 0) {
+        momGrowth = ((currentMonthRevenue - prevMonthRevenue) / prevMonthRevenue) * 100;
+    } else if (currentMonthRevenue > 0) {
+        momGrowth = 100; // infinite growth from 0
+    }
+
+    // 3. Daily Trend (Last 30 Days) - CREDITS sold
+    const dailyTrendMap = new Map<string, number>();
+    // Initialize last 30 days with 0
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = d.toISOString().split('T')[0];
+        dailyTrendMap.set(key, 0);
+    }
+
+    data.forEach(t => {
+        const d = new Date(t.created_at);
+        const key = d.toISOString().split('T')[0];
+        if (dailyTrendMap.has(key)) {
+            dailyTrendMap.set(key, (dailyTrendMap.get(key) || 0) + (t.amount_credits || 0));
+        }
+    });
+
+    const dailyTrend = Array.from(dailyTrendMap.entries()).map(([date, value]) => ({ date, value }));
+
+    return {
+        revenue: totalRevenue,
+        momGrowth,
+        dailyTrend
+    };
 }

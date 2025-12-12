@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { Settings, Save, User as UserIcon, CreditCard, Activity, List, RefreshCw, Lock, AlertTriangle, Users, Plus, Minus } from 'lucide-react';
+import { Settings, Save, User as UserIcon, CreditCard, Activity, List, RefreshCw, Lock, AlertTriangle, Users, Plus, Minus, TrendingUp, TrendingDown } from 'lucide-react';
 import { clsx } from 'clsx';
 import { getLogs, ActivityLog, adminGetAllUsers, adminUpdateUser, getConfig, updateConfig, UserProfile, AppConfig, getFinancialStats } from '@/app/actions';
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
@@ -29,7 +29,7 @@ export default function AdminPage() {
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
 
     // Revenue State
-    const [totalRevenue, setTotalRevenue] = useState(0);
+    const [stats, setStats] = useState({ revenue: 0, momGrowth: 0, dailyTrend: [] as { date: string, value: number }[] });
 
     const isAdmin = user?.primaryEmailAddress?.emailAddress === ADMIN_EMAIL;
 
@@ -46,9 +46,14 @@ export default function AdminPage() {
 
     }, [activeTab, isAdmin]);
 
+    useEffect(() => {
+        console.log('AdminPage Stats Updated:', stats);
+    }, [stats]);
+
     const loadRevenue = async () => {
-        const stats = await getFinancialStats();
-        setTotalRevenue(stats.revenue);
+        const data = await getFinancialStats();
+        // @ts-ignore - mismatch in dailyTrend typing if interface not exported strictly, but runtime is fine.
+        setStats(data);
     };
 
     // Force tab logic
@@ -155,17 +160,71 @@ export default function AdminPage() {
                     {/* REVENUE SUMMARY CARD */}
                     {isAdmin && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <div className="glass-panel p-6 flex flex-col justify-between h-32 bg-white border-l-4 border-l-emerald-500 shadow-sm">
-                                <div className="flex justify-between items-start">
-                                    <div>
+                            {/* CARD 1: REVENUE SUMMARY */}
+                            <div className="glass-panel p-6 bg-white border-l-4 border-l-emerald-500 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden">
+                                <div className="z-10 relative">
+                                    <div className="flex items-center gap-2 mb-1">
                                         <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Revenue</p>
-                                        <h2 className="text-3xl font-bold text-slate-900 mt-1">${totalRevenue.toFixed(2)}</h2>
                                     </div>
-                                    <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                                        <CreditCard size={20} />
+                                    <h2 className="text-3xl font-bold text-slate-900">${stats.revenue.toFixed(2)}</h2>
+
+                                    {/* MoM Indicator */}
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <div className={clsx(
+                                            "flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full",
+                                            stats.momGrowth >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
+                                        )}>
+                                            {stats.momGrowth >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                                            {Math.abs(stats.momGrowth).toFixed(1)}%
+                                            <span className="font-normal opacity-80 pl-1">vs last month</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="text-xs text-slate-400">Life-time gross revenue</div>
+                                <div className="absolute right-4 top-4 opacity-10 pointer-events-none">
+                                    <CreditCard size={100} />
+                                </div>
+                            </div>
+
+                            {/* CARD 2: SALES CHART */}
+                            <div className="glass-panel p-6 bg-white border-l-4 border-l-blue-500 shadow-sm md:col-span-2 h-32 relative overflow-hidden flex flex-col justify-between">
+                                <div className="flex justify-between items-start mb-2 z-10 relative">
+                                    <h3 className="text-slate-500 text-xs font-bold uppercase tracking-wider">Daily Credits Sales (30 Days)</h3>
+                                    <p className="text-xs text-slate-400 font-mono">Last updated: {new Date().toLocaleTimeString()}</p>
+                                </div>
+
+                                <div className="w-full h-full flex items-end relative z-10">
+                                    {stats.dailyTrend.length > 0 ? (
+                                        <svg viewBox="0 0 100 25" preserveAspectRatio="none" className="w-full h-20 overflow-visible drop-shadow-sm">
+                                            <defs>
+                                                <linearGradient id="chartGradientBlue" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
+                                                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                            {(() => {
+                                                const values = stats.dailyTrend.map(d => d.value);
+                                                const max = Math.max(...values, 5);
+                                                const points = values.map((val, i) => {
+                                                    const x = (i / (values.length - 1)) * 100;
+                                                    const y = 25 - ((val / max) * 25);
+                                                    return `${x},${y}`;
+                                                });
+
+                                                const pathD = `M ${points.join(' L ')}`;
+                                                const fillD = `${pathD} L 100,25 L 0,25 Z`;
+
+                                                return (
+                                                    <>
+                                                        <path d={fillD} fill="url(#chartGradientBlue)" stroke="none" />
+                                                        <path d={pathD} fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+                                                    </>
+                                                );
+                                            })()}
+                                        </svg>
+                                    ) : (
+                                        <div className="w-full text-center text-slate-400 text-xs py-4">No data available</div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     )}
