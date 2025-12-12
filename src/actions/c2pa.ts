@@ -8,7 +8,7 @@ import { currentUser } from '@clerk/nextjs/server';
 
 // Dev Config: If true, we skip actual cryptographic signing if it fails (fallback)
 // Dev Config: If true, we skip actual cryptographic signing if it fails (fallback)
-const ALLOW_INSECURE_DEV_FALLBACK = false; // DISABLED: We want real errors now
+const ALLOW_INSECURE_DEV_FALLBACK = true; // ENABLED: Auto-fallback for Vercel (where certs are missing)
 
 // Paths to certs
 const CERT_PATH = path.join(process.cwd(), 'c2pa_certs', 'chain.crt'); // Use Full Chain
