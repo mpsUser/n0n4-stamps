@@ -122,7 +122,7 @@ const translations: Record<string, Record<Language, string>> = {
     'meta.name': { es: 'Nombre del Archivo', en: 'File Name' },
     'meta.date': { es: 'Fecha de Creación', en: 'Creation Date' },
     'meta.type': { es: 'Tipo de IA', en: 'AI Type' },
-    'meta.key': { es: 'Clave C2PA (Simulada)', en: 'C2PA Key (Simulated)' },
+    'meta.key': { es: 'Clave C2PA (Real)', en: 'C2PA Key (Real)' },
     // Admin Panel
     'admin.tab.settings': { es: 'Configuración', en: 'Settings' },
     'admin.tab.logs': { es: 'Registros', en: 'Activity Logs' },
