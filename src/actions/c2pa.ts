@@ -43,10 +43,15 @@ export async function signAndUploadAction(formData: FormData, metadata: any): Pr
     let keyPath = path.join(process.cwd(), 'c2pa_certs', 'private.key');
 
     if (process.env.C2PA_CERTIFICATE && process.env.C2PA_PRIVATE_KEY) {
-        console.log('[C2PA] Using Production Env Vars for keys');
+        console.log('[C2PA] Env Vars Detected');
+        console.log(`[C2PA] Cert Length: ${process.env.C2PA_CERTIFICATE.length}`);
+        console.log(`[C2PA] Key Length: ${process.env.C2PA_PRIVATE_KEY.length}`);
+
         try {
             certPath = path.join('/tmp', 'prod_chain.crt');
             keyPath = path.join('/tmp', 'prod_private.key');
+
+            console.log(`[C2PA] Writing to: ${certPath} and ${keyPath}`);
 
             // Normalize newlines (Vercel env var fix)
             const certContent = process.env.C2PA_CERTIFICATE.replace(/\\n/g, '\n');
@@ -54,10 +59,13 @@ export async function signAndUploadAction(formData: FormData, metadata: any): Pr
 
             await fs.writeFile(certPath, certContent);
             await fs.writeFile(keyPath, keyContent);
+            console.log('[C2PA] Temp files written successfully');
         } catch (err) {
             console.error('[C2PA] Failed to write temp certs:', err);
             // Fallback will naturally occur if these files are empty/missing
         }
+    } else {
+        console.log('[C2PA] No Env Vars found. Checking local files...');
     }
 
     try {
