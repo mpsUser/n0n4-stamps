@@ -206,7 +206,7 @@ export async function verifyAction(formData: FormData): Promise<{ success: boole
             await fs.writeFile(tempInput, buffer);
             try {
                 const result = await c2pa.read({ path: tempInput, mimeType });
-                report = result?.manifest;
+                report = result?.active_manifest;
             } finally {
                 await fs.unlink(tempInput).catch(() => { });
             }
