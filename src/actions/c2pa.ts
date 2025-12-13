@@ -115,7 +115,7 @@ export async function signAndUploadAction(formData: FormData, metadata: any): Pr
             await fs.writeFile(tempInput, buffer);
 
             const { signedAsset } = await c2pa.sign({
-                asset: { path: tempInput, mimeType },
+                asset: { path: tempInput, mimeType: 'application/pdf' },
                 manifest,
                 options: { outputPath: tempOutput }
             });
@@ -205,7 +205,7 @@ export async function verifyAction(formData: FormData): Promise<{ success: boole
             const tempInput = path.join('/tmp', `verify_${Date.now()}.pdf`);
             await fs.writeFile(tempInput, buffer);
             try {
-                const result = await c2pa.read({ path: tempInput, mimeType });
+                const result = await c2pa.read({ path: tempInput, mimeType: 'application/pdf' });
                 report = result?.active_manifest;
             } finally {
                 await fs.unlink(tempInput).catch(() => { });
