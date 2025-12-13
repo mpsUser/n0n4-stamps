@@ -216,7 +216,9 @@ export async function verifyAction(formData: FormData): Promise<{ success: boole
             // Check for N0N4 specific metadata
             const customAssertion = report.assertions?.find((a: any) => a.label === 'n0n4.metadata');
             if (customAssertion) {
-                return { success: true, metadata: customAssertion.data };
+                // Ensure data is plain JSON
+                const cleanData = JSON.parse(JSON.stringify(customAssertion.data));
+                return { success: true, metadata: cleanData };
             }
 
             // Generic C2PA found but no N0N4 data -> Return simplified Generic Metadata
@@ -235,7 +237,7 @@ export async function verifyAction(formData: FormData): Promise<{ success: boole
             };
         }
     } catch (e: any) {
-        console.warn('[C2PA] Standard verification failed or no manifest:', e.message);
+        console.warn('[C2PA] Standard verification failed or no manifest:', e?.message || String(e));
     }
 
     // --- STRATEGY 2: Legacy Fallback (Appended JSON) ---
