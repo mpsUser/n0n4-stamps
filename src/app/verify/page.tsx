@@ -29,6 +29,11 @@ export default function VerifyPage() {
     };
 
     const requestVerify = async (f: File) => {
+        if (!user) {
+            alert('Please sign in to verify files.');
+            return;
+        }
+
         // Enforce credit charge
         try {
             await chargeUser('VERIFY');
