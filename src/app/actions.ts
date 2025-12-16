@@ -100,7 +100,7 @@ async function getUserDB(email: string): Promise<UserProfile> {
 
         if (insertError) {
             console.error("Error creating user:", insertError);
-            return { email, credits: 0, discount: 0 }; // Fallback
+            return { email, credits: 0, discount: 0, plan: 'free' }; // Fallback
         }
         profile = data;
     }
