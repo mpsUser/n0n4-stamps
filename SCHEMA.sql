@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS app_config (
 
 -- Insert default config if not exists
 INSERT INTO app_config (key, value) 
-VALUES ('pricing', '{"protection": 1, "verification": 1}')
+VALUES ('pricing', '{"protection": 10, "verification": 1}')
 ON CONFLICT (key) DO NOTHING;
 
 -- 3. Uploads Table

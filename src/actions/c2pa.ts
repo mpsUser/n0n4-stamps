@@ -107,6 +107,9 @@ export async function signAndUploadAction(formData: FormData, metadata: any): Pr
             signingSuccess = true;
 
         } else if (isPdf) {
+            console.warn('[C2PA] PDF Signing disabled in Vercel due to missing dependencies. Forcing Fallback.');
+            throw new Error("PDF_SIGNING_DISABLED");
+
             // File Signing (using /tmp)
             console.log('[C2PA] Signing PDF in /tmp...');
             const tempInput = path.join('/tmp', `input_${Date.now()}.pdf`);

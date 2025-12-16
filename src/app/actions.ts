@@ -58,7 +58,7 @@ export async function getConfig(): Promise<AppConfig> {
         .single();
 
     if (error || !data) {
-        return { protectionCost: 1, verificationCost: 1 };
+        return { protectionCost: 10, verificationCost: 1 };
     }
     return data.value;
 }
@@ -174,7 +174,7 @@ export async function chargeUser(action: 'PROTECT' | 'VERIFY') {
     return { success: true, remaining: newBalance, cost };
 }
 
-export async function simulateBuyCredits(amount: number, price: number) {
+export async function simulateBuyCredits(amount: number, price: number, planName?: string) {
     const user = await currentUser();
     if (!user || !user.primaryEmailAddress) return { success: false, message: "User not authenticated" };
     const email = user.primaryEmailAddress.emailAddress;
@@ -203,7 +203,12 @@ export async function simulateBuyCredits(amount: number, price: number) {
         // We do not fail the whole request as credits were added, but revenue might miss this entry.
     }
 
-    await logActivity('BUY_CREDITS', `User purchased ${amount} credits for $${price}. New balance: ${newBalance}`, email);
+    const logAction = planName ? 'SUBSCRIBE_PLAN' : 'BUY_CREDITS';
+    const logDetails = planName
+        ? `User subscribed to ${planName}. +${amount} credits for $${price}. New balance: ${newBalance}`
+        : `User purchased ${amount} credits for $${price}. New balance: ${newBalance}`;
+
+    await logActivity(logAction, logDetails, email);
     return { success: true, newBalance };
 }
 
