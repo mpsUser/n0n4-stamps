@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
     credits INTEGER DEFAULT 10,
     discount INTEGER DEFAULT 0,
+    plan TEXT DEFAULT 'free',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

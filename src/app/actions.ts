@@ -37,6 +37,7 @@ export interface UserProfile {
     email: string;
     credits: number;
     discount: number; // 0-100
+    plan: string;
     created_at?: string;
 }
 
@@ -90,7 +91,7 @@ async function getUserDB(email: string): Promise<UserProfile> {
 
     if (error || !profile) {
         // Create new user if not found
-        const newProfile = { email, credits: 10, discount: 0 };
+        const newProfile = { email, credits: 10, discount: 0, plan: 'free' };
         const { data, error: insertError } = await supabase
             .from('users')
             .insert(newProfile)
@@ -182,10 +183,16 @@ export async function simulateBuyCredits(amount: number, price: number, planName
     const profile = await getUserDB(email);
     const newBalance = profile.credits + amount;
 
-    // 1. Update Credits
+    // Determine if this is a Plan Subscription
+    let newPlan = profile.plan;
+    if (planName === 'Starter' || planName === 'Professional' || planName === 'Enterprise') {
+        newPlan = planName.toLowerCase();
+    }
+
+    // 1. Update Credits and Plan
     const { error } = await supabase
         .from('users')
-        .update({ credits: newBalance })
+        .update({ credits: newBalance, plan: newPlan })
         .eq('email', email);
 
     if (error) return { success: false, message: "Purchase failed" };
