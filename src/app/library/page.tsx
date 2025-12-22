@@ -169,9 +169,15 @@ export default function LibraryPage() {
                                         <div key={item.id} className="glass-panel p-0 overflow-hidden bg-white border border-slate-200 hover:shadow-lg transition-all group relative animate-in fade-in duration-500">
                                             {/* Preview Area */}
                                             <div className="h-48 bg-slate-100 relative flex items-center justify-center overflow-hidden">
-                                                {item.isImage && item.serverPath ? (
+                                                {(item.isImage && item.serverPath) ? (
                                                     <>
-                                                        <Image src={item.serverPath} alt={item.name} fill className="object-cover" unoptimized />
+                                                        <Image
+                                                            src={item.serverPath!}
+                                                            alt={item.name}
+                                                            fill
+                                                            className="object-cover"
+                                                            unoptimized
+                                                        />
                                                         <div className="absolute top-2 right-2 w-16 h-16 drop-shadow-md backdrop-blur-sm bg-white/20 rounded-full p-1 border border-white/50">
                                                             <Image src={stampUrl} alt="Stamp" fill className="object-contain p-1" unoptimized />
                                                         </div>
@@ -235,8 +241,8 @@ export default function LibraryPage() {
                                             <tr key={item.id} className="hover:bg-slate-50 transition-colors">
                                                 <td className="px-4 py-2">
                                                     <div className="w-10 h-10 bg-slate-100 rounded-md overflow-hidden relative border border-slate-200 flex items-center justify-center">
-                                                        {item.isImage && item.serverPath ? (
-                                                            <Image src={item.serverPath} alt="" fill className="object-cover" unoptimized />
+                                                        {(item.isImage && item.serverPath) ? (
+                                                            <Image src={item.serverPath!} alt="" fill className="object-cover" unoptimized />
                                                         ) : (
                                                             <FileText size={20} className="text-slate-300" />
                                                         )}

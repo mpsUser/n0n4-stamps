@@ -56,60 +56,98 @@ export default function UploadPage() {
         if (!file) return;
         setIsProcessing(true);
 
-        const timestamp = Date.now();
-        const newName = `${timestamp}_${file.name}`; // Unique name
-
-        // Metadata to be signed
-        const metadata = {
-            author: 'Usuario Demo',
-            level,
-            levelLabel: appLanguage === 'es' ? currentLevelData.label_es : currentLevelData.label_en,
-            stampStyle,
-            stampFormat,
-            stampLanguage: appLanguage === 'es' ? 'es' : 'en',
-            timestamp: new Date().toISOString(),
-            c2pa_key: c2paKey
-        };
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('newName', newName);
+        const newName = `${Date.now()}_${file.name}`; // Unique name
 
         try {
-            // New Server Action: Signs (if possible) and Uploads
-            const result = await signAndUploadAction(formData, metadata);
+            // 1. Get Presigned URL
+            // Note: This also charges the user credits upfront
+            const { success, url, key, error } = await import('@/app/actions').then(m => m.getUploadUrlAction(newName, file.type));
 
-            if (result.success && result.signedUrl) {
-                setProtectedUrl(result.signedUrl);
-
-                if (result.isFallback) {
-                    // Optional: Notify user that signing was simulated due to dev certs
-                    console.log("Note: File was uploaded but signing fell back to original/simulated due to dev environment.");
-                }
-
-                // Save to Server DB (User Isolated)
-                await saveUploadRecord({
-                    id: timestamp,
-                    name: file.name,
-                    serverPath: result.signedUrl,
-                    level,
-                    style: stampStyle,
-                    lang: appLanguage,
-                    date: new Date().toISOString(),
-                    isImage: file.type.startsWith('image/')
-                });
-
-                // Update UI credits
-                await refreshCredits();
-
-                setIsDone(true);
-            } else {
-                alert(result.error || "Error uploading file");
+            if (!success || !url || !key) {
+                throw new Error(error || "Failed to get upload URL");
             }
+
+            // 2. Upload to R2 (Direct)
+            // Use XMLHttpRequest or fetch. fetch is easier.
+            const uploadRes = await fetch(url, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                    'Content-Type': file.type
+                }
+            });
+
+            if (!uploadRes.ok) {
+                throw new Error("Failed to upload file to storage server.");
+            }
+
+            // 3. Create Job
+            const metadata = {
+                author: 'Usuario Demo', // TODO: Get from user
+                level,
+                levelLabel: LEVELS[level]?.label_en || 'Standard',
+                stampStyle,
+                timestamp: new Date().toISOString(),
+                c2pa_key: c2paKey
+            };
+
+            const { success: jobSuccess, jobId, error: jobError } = await import('@/app/actions').then(m => m.createJobAction(key, metadata));
+
+            if (!jobSuccess || !jobId) {
+                throw new Error(jobError || "Failed to queue processing job.");
+            }
+
+            // 4. Poll for Result
+            let attempts = 0;
+            const maxAttempts = 90; // 3 minutes (2s interval) - increased for Cloud Run Cold Starts
+
+            const poll = setInterval(async () => {
+                attempts++;
+                const job = await import('@/app/actions').then(m => m.getJobStatusAction(jobId));
+
+                if (job?.status === 'COMPLETED') {
+                    clearInterval(poll);
+
+                    // SAVE TO LIBRARY
+                    // Validates that the job is truly done and we have the result.
+                    if (job.output_path) {
+                        try {
+                            const { success, error } = await import('@/app/actions').then(m => m.saveUploadRecord({
+                                id: 0, // Auto-gen
+                                name: file.name, // Use original name
+                                serverPath: job.output_path, // R2 Key
+                                level: level,
+                                style: stampStyle,
+                                lang: appLanguage === 'es' ? 'es' : 'en',
+                                date: new Date().toISOString(),
+                                isImage: false // Not used for saving
+                            }));
+
+                            if (!success) console.error("Failed to save to library:", error);
+
+                        } catch (saveErr) {
+                            console.error("Library save error:", saveErr);
+                        }
+
+                        // FINISH UI
+                        setIsDone(true);
+                        setProtectedUrl(null);
+                    }
+                    setIsProcessing(false);
+                } else if (job?.status === 'FAILED') {
+                    clearInterval(poll);
+                    alert("Processing Failed: " + job.error);
+                    setIsProcessing(false);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(poll);
+                    alert("Processing Timed Out. Please check your library later.");
+                    setIsProcessing(false);
+                }
+            }, 2000);
+
         } catch (e: any) {
-            console.error("Upload failed", e);
-            alert("Error uploading file: " + e.message);
-        } finally {
+            console.error("Process failed", e);
+            alert("Error: " + e.message);
             setIsProcessing(false);
         }
     };

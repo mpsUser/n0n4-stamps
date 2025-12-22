@@ -1,0 +1,22 @@
+{
+    "name": "n0n4-backend-worker",
+    "version": "1.0.0",
+    "description": "Cloud Run worker for C2PA processing",
+    "main": "dist/worker.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/worker.js",
+        "dev": "ts-node src/worker.ts"
+    },
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.454.0",
+        "@aws-sdk/s3-request-presigner": "^3.454.0",
+        "@supabase/supabase-js": "^2.39.0",
+        "dotenv": "^16.3.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.3.2"
+    }
+}

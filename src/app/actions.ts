@@ -2,6 +2,7 @@
 
 import { currentUser } from '@clerk/nextjs/server';
 import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { generateUploadUrl, generateDownloadUrl } from '@/lib/r2';
 
 const ADMIN_EMAIL = 'marcpedrero@gmail.com';
 
@@ -291,17 +292,30 @@ export async function getUserUploads() {
     if (!data) return [];
 
     // Map DB snake_case to Frontend camelCase & infer isImage
-    return data.map((item: any) => ({
-        id: item.id,
-        name: item.filename,
-        serverPath: item.file_path,
-        level: item.level,
-        style: item.style,
-        lang: item.lang,
-        date: item.created_at,
-        email: item.user_email, // Add owner email
-        isImage: item.filename.match(/\.(jpeg|jpg|png|webp|gif)$/i) ? true : false
-    }));
+    // We must generate signed URLs for R2 keys if they are not already http URLs
+    const updatedData = await Promise.all(
+        data.map(async (item: any) => {
+            let signedPath = item.file_path;
+            if (item.file_path && !item.file_path.startsWith('http')) {
+                // Assume R2 key
+                signedPath = await generateDownloadUrl(item.file_path) || item.file_path;
+            }
+
+            return {
+                id: item.id,
+                name: item.filename,
+                serverPath: signedPath, // Used for download/preview
+                level: item.level,
+                style: item.style,
+                lang: item.lang,
+                date: item.created_at,
+                email: item.user_email, // Add owner email
+                isImage: item.filename.match(/\.(jpeg|jpg|png|webp|gif)$/i) ? true : false
+            };
+        })
+    );
+
+    return updatedData;
 }
 
 export async function deleteFile(fileId: string, serverPath: string) {
@@ -363,7 +377,7 @@ export async function saveUploadRecord(record: Omit<UploadRecord, 'email'>) {
         // ignoring id, let DB auto-gen UUID
     });
 
-    return { success: !error };
+    return { success: !error, error: error?.message };
 }
 
 // --- LOGGING SYSTEM ---
@@ -562,3 +576,64 @@ export async function getFinancialStats() {
         dailyTrend
     };
 }
+
+// --- NEW ARCHITECTURE ACTIONS ---
+
+/**
+ * 1. Get Presigned URL for Direct Upload
+ */
+export async function getUploadUrlAction(filename: string, contentType: string) {
+    const user = await currentUser();
+    if (!user) throw new Error("Unauthorized");
+
+    // Validate credits before allowing upload!
+    await chargeUser('PROTECT'); // We charge upfront here. If upload fails, maybe refund? Simpler to charge first.
+
+    try {
+        const url = await generateUploadUrl(`raw/${filename}`, contentType);
+        return { success: true, url, key: `raw/${filename}` };
+    } catch (e: any) {
+        console.error("Presign failed:", e);
+        return { success: false, error: e.message };
+    }
+}
+
+/**
+ * 2. Create Job after successful upload
+ */
+export async function createJobAction(inputPath: string, metadata: any) {
+    const user = await currentUser();
+    if (!user || !user.primaryEmailAddress) throw new Error("Unauthorized");
+    const email = user.primaryEmailAddress.emailAddress;
+
+    const { data, error } = await supabase
+        .from('jobs')
+        .insert({
+            user_email: email,
+            input_path: inputPath,
+            status: 'PENDING'
+            // In a real app we'd store metadata in a separate column or JSONB 'params'
+            // For now, the Worker assumes basic C2PA logic.
+            // TODO: If we want to pass specific metadata to the worker, add a 'meta' column or job parameters.
+        })
+        .select()
+        .single();
+
+    if (error) return { success: false, error: error.message };
+    return { success: true, jobId: data.id };
+}
+
+/**
+ * 3. Poll Job Status
+ */
+export async function getJobStatusAction(jobId: string) {
+    const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('id', jobId)
+        .single();
+
+    if (error || !data) return null;
+    return data;
+}
+
